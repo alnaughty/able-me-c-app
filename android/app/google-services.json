@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "119577974992",
+    "project_id": "able-me",
+    "storage_bucket": "able-me.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119577974992:android:b9c647031f06c5cf72a6d5",
+        "android_client_info": {
+          "package_name": "com.alnaughtech.able_me"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmhWy2Ki5G3U9soWiTj_0bHzecjeloBko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
