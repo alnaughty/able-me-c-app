@@ -214,11 +214,13 @@ class _RecoveryCodePageState extends State<RecoveryCodePage> with ColorPalette {
           Positioned.fill(
             child: Container(
               color: Colors.black.withOpacity(.5),
-              child: CircularProgressIndicator.adaptive(
-                valueColor: const AlwaysStoppedAnimation(Colors.white),
-                backgroundColor: Platform.isIOS
-                    ? Colors.white
-                    : Colors.white.withOpacity(.5),
+              child: Center(
+                child: CircularProgressIndicator.adaptive(
+                  valueColor: const AlwaysStoppedAnimation(Colors.white),
+                  backgroundColor: Platform.isIOS
+                      ? Colors.white
+                      : Colors.white.withOpacity(.5),
+                ),
               ),
             ),
           ),

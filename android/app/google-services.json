@@ -1,26 +1,43 @@
 {
   "project_info": {
-    "project_number": "119577974992",
-    "project_id": "able-me",
-    "storage_bucket": "able-me.appspot.com"
+    "project_number": "339534952888",
+    "project_id": "able-me-24704",
+    "storage_bucket": "able-me-24704.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:119577974992:android:b9c647031f06c5cf72a6d5",
+        "mobilesdk_app_id": "1:339534952888:android:4552183e9f9f53c524774d",
         "android_client_info": {
           "package_name": "com.alnaughtech.able_me"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "339534952888-jiks19ts0lmpo59ds41tfjuf1nf7jfpn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyAmhWy2Ki5G3U9soWiTj_0bHzecjeloBko"
+          "current_key": "AIzaSyBGnzS61Ka4lQ87GKtNLSDh9HM_9Yyur4w"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "339534952888-jiks19ts0lmpo59ds41tfjuf1nf7jfpn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "339534952888-3oriesj03qv9n2qk3pt13hmoi0qpbpjt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.alnaughtech.ableMe"
+              }
+            }
+          ]
         }
       }
     }

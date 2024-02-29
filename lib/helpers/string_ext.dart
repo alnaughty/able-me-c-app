@@ -4,4 +4,6 @@ extension VALIDATOR on String {
   bool get isValidEmail {
     return _email.hasMatch(toLowerCase());
   }
+
+  Uri get toUri => Uri.parse(this);
 }

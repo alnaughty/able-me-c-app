@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAmhWy2Ki5G3U9soWiTj_0bHzecjeloBko',
-    appId: '1:119577974992:android:b9c647031f06c5cf72a6d5',
-    messagingSenderId: '119577974992',
-    projectId: 'able-me',
-    storageBucket: 'able-me.appspot.com',
+    apiKey: 'AIzaSyBGnzS61Ka4lQ87GKtNLSDh9HM_9Yyur4w',
+    appId: '1:339534952888:android:4552183e9f9f53c524774d',
+    messagingSenderId: '339534952888',
+    projectId: 'able-me-24704',
+    storageBucket: 'able-me-24704.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAZ0cfUGhpGzqIFmJkr9_My2ISw_dOdQhE',
-    appId: '1:119577974992:ios:e9bfb193dca89c8372a6d5',
-    messagingSenderId: '119577974992',
-    projectId: 'able-me',
-    storageBucket: 'able-me.appspot.com',
+    apiKey: 'AIzaSyBgbcROXD5YbfeSZbN4F_jqqL80FDeiolg',
+    appId: '1:339534952888:ios:950447ee454bb91224774d',
+    messagingSenderId: '339534952888',
+    projectId: 'able-me-24704',
+    storageBucket: 'able-me-24704.appspot.com',
+    iosClientId: '339534952888-3oriesj03qv9n2qk3pt13hmoi0qpbpjt.apps.googleusercontent.com',
     iosBundleId: 'com.alnaughtech.ableMe',
   );
 }

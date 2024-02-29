@@ -2,6 +2,7 @@ import 'package:able_me/views/authentication/forgot_password_page.dart';
 import 'package:able_me/views/authentication/login.dart';
 import 'package:able_me/views/authentication/recovery_code.dart';
 import 'package:able_me/views/authentication/register.dart';
+import 'package:able_me/views/landing_page/children/ableme_map.dart';
 import 'package:able_me/views/landing_page/landing_page.dart';
 import 'package:able_me/views/splash_screen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -97,18 +98,35 @@ class RouteConfig {
         ],
       ),
       GoRoute(
-          path: '/landing-page/:index',
-          pageBuilder: (BuildContext context, GoRouterState state) {
-            print(state.fullPath);
-            return buildPageWithDefaultTransition(
-              context: context,
-              state: state,
-              child: LandingPage(
-                initIndex: int.parse(state.pathParameters['index'] ?? "0"),
-              ),
-              type: ZTransitionAnim.slideLR,
-            );
-          }),
+        path: '/landing-page/:index',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          print(state.fullPath);
+          return buildPageWithDefaultTransition(
+            context: context,
+            state: state,
+            child: LandingPage(
+              initIndex: int.parse(state.pathParameters['index'] ?? "0"),
+            ),
+            type: ZTransitionAnim.slideLR,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/map-page/:id/:coordinates',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          print(state.fullPath);
+          return buildPageWithDefaultTransition(
+            context: context,
+            state: state,
+            child: AbleMeMapPage(
+              coordinates: state.pathParameters['coordinates']!,
+              uid: int.parse(state.pathParameters['uid']!),
+              // initIndex: int.parse(state.pathParameters['index'] ?? "0"),
+            ),
+            type: ZTransitionAnim.slideLR,
+          );
+        },
+      ),
     ],
   );
 

@@ -9,14 +9,14 @@ class Coordinates {
 
   /// Creates coordinates from a map containing its properties.
   Coordinates.fromMap(Map map)
-      : this.latitude = map["latitude"],
-        this.longitude = map["longitude"];
+      : latitude = map["latitude"],
+        longitude = map["longitude"];
 
   /// Creates a map from the coordinates properties.
   Map toMap() => {
-        "latitude": this.latitude,
-        "longitude": this.longitude,
+        "latitude": latitude,
+        "longitude": longitude,
       };
-
-  String toString() => "{$latitude,$longitude}";
+  @override
+  String toString() => "$latitude,$longitude";
 }

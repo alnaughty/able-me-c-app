@@ -1,4 +1,5 @@
 import 'package:able_me/app_config/palette.dart';
+import 'package:able_me/helpers/context_ext.dart';
 import 'package:able_me/helpers/date_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -11,6 +12,7 @@ class RecentBookingPage extends StatelessWidget with ColorPalette {
   @override
   Widget build(BuildContext context) {
     final TextTheme fontTheme = Theme.of(context).textTheme;
+    final Color textColor = context.theme.secondaryHeaderColor;
     return Column(
       children: [
         Row(
@@ -22,8 +24,8 @@ class RecentBookingPage extends StatelessWidget with ColorPalette {
               Text(
                 "Recent Booking",
                 style: fontTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+                    fontWeight: FontWeight.w700,
+                    color: context.theme.secondaryHeaderColor),
               ),
             ]),
             TextButton(
@@ -36,6 +38,10 @@ class RecentBookingPage extends StatelessWidget with ColorPalette {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Card(
+            elevation: 1,
+            shadowColor: Colors.grey.shade900,
+            color: context.theme.cardColor,
+            surfaceTintColor: Colors.transparent,
             child: InkWell(
               onTap: () {},
               child: Column(children: [
@@ -46,21 +52,25 @@ class RecentBookingPage extends StatelessWidget with ColorPalette {
                         style: fontTheme.bodyMedium!.copyWith(
                           fontWeight: FontWeight.w600,
                           fontFamily: "Montserrat",
+                          color: textColor,
                         ),
                         children: [
                           TextSpan(
                             text: "Transportation",
                             style: TextStyle(
-                              color: blue,
+                              color: context.theme.colorScheme.secondary,
                               fontWeight: FontWeight.w700,
                             ),
                           )
                         ]),
                   ),
-                  subtitle: const Text(
+                  subtitle: Text(
                     "6 Bexley Place,Canberra, 4212, Australia",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: textColor.withOpacity(.6),
+                    ),
                   ),
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -85,19 +95,21 @@ class RecentBookingPage extends StatelessWidget with ColorPalette {
                       Text(
                         DateTime.now().subtract(10.days).formatTimeAgo,
                         style: fontTheme.bodySmall!
-                            .copyWith(color: Colors.black.withOpacity(.4)),
+                            .copyWith(color: textColor.withOpacity(.4)),
                       ),
                     ],
                   ),
                 ),
                 Divider(
-                  color: Colors.black.withOpacity(.3),
+                  color: textColor.withOpacity(.3),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: Text(
                     "View Details",
-                    style: fontTheme.labelMedium,
+                    style: fontTheme.labelMedium!.copyWith(
+                      color: textColor,
+                    ),
                   ),
                 ),
                 const Gap(5)

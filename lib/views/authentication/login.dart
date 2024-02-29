@@ -1,23 +1,28 @@
 import 'dart:io';
 
 import 'package:able_me/app_config/palette.dart';
+import 'package:able_me/helpers/auth/auth_helper.dart';
 import 'package:able_me/helpers/globals.dart';
+import 'package:able_me/view_models/auth/user_provider.dart';
 import 'package:able_me/views/authentication/login_with_socmed.dart';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key, this.tag});
   final String? tag;
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with ColorPalette {
+class _LoginPageState extends ConsumerState<LoginPage>
+    with ColorPalette, AuthHelper {
   final GlobalKey<FormState> _kForm = GlobalKey<FormState>();
   late final TextEditingController _email;
   late final TextEditingController _password;
@@ -26,17 +31,25 @@ class _LoginPageState extends State<LoginPage> with ColorPalette {
   bool isObscured = true;
   bool isLoading = false;
   Future<void> login() async {
+    FocusScope.of(context).unfocus();
     setState(() {
       isLoading = true;
     });
-    await Future.delayed(1500.ms);
-    setState(() {
-      isLoading = false;
-    });
-    // ignore: use_build_context_synchronously
-    context.pushReplacement(
-      '/landing-page/0',
+    final String? _accessToken = await apiLogin(
+      _email.text,
+      _password.text,
     );
+    isLoading = false;
+    if (mounted) setState(() {});
+    if (_accessToken != null) {
+      // accessTokenProvider. = _accessToken;
+      ref.read(accessTokenProvider.notifier).update((state) => _accessToken);
+      cacher.setUserToken(_accessToken);
+      // ignore: use_build_context_synchronously
+      context.pushReplacement(
+        '/landing-page/0',
+      );
+    }
   }
 
   @override
@@ -186,6 +199,7 @@ class _LoginPageState extends State<LoginPage> with ColorPalette {
                                 .slideY(begin: 1, end: 0),
                             const Gap(10),
                             TextFormField(
+                              controller: _password,
                               focusNode: _passwordNode,
                               // autovalidateMode: AutovalidateMode.always,
                               validator: FormBuilderValidators.compose([
@@ -207,7 +221,7 @@ class _LoginPageState extends State<LoginPage> with ColorPalette {
                               keyboardType: TextInputType.visiblePassword,
                               obscureText: isObscured,
                               decoration: InputDecoration(
-                                hintText: "∗∗∗∗∗",
+                                hintText: "Password",
                                 // hintText: "⁕⁕⁕⁕⁕",
                                 label: const Text("Password"),
                                 suffixIcon: IconButton(
@@ -351,11 +365,13 @@ class _LoginPageState extends State<LoginPage> with ColorPalette {
           Positioned.fill(
             child: Container(
               color: Colors.black.withOpacity(.5),
-              child: CircularProgressIndicator.adaptive(
-                valueColor: const AlwaysStoppedAnimation(Colors.white),
-                backgroundColor: Platform.isIOS
-                    ? Colors.white
-                    : Colors.white.withOpacity(.5),
+              child: Center(
+                child: CircularProgressIndicator.adaptive(
+                  valueColor: const AlwaysStoppedAnimation(Colors.white),
+                  backgroundColor: Platform.isIOS
+                      ? Colors.white
+                      : Colors.white.withOpacity(.5),
+                ),
               ),
             ),
           ),

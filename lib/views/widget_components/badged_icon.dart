@@ -1,4 +1,5 @@
 import 'package:able_me/app_config/palette.dart';
+import 'package:able_me/helpers/context_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -26,6 +27,7 @@ class _BadgedIconState extends State<BadgedIcon> with ColorPalette {
           icon: SvgPicture.asset(
             widget.iconPath,
             width: widget.iconSize,
+            color: context.theme.secondaryHeaderColor,
           ),
         ),
         if (widget.isBadged) ...{
@@ -34,7 +36,7 @@ class _BadgedIconState extends State<BadgedIcon> with ColorPalette {
             right: 8,
             child: Badge(
               smallSize: 10,
-              backgroundColor: orange,
+              backgroundColor: context.theme.colorScheme.primary,
             ),
           )
         },

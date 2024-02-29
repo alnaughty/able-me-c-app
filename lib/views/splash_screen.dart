@@ -1,20 +1,34 @@
+import 'package:able_me/services/app_src/data_cacher.dart';
+import 'package:able_me/view_models/auth/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen> {
+  final DataCacher _cacher = DataCacher.instance;
   Future<void> initCheck() async {
-    await Future.delayed(5000.ms);
+    final String? _accessToken = _cacher.getUserToken();
+    ref.read(accessTokenProvider.notifier).update((state) => _accessToken);
+    await Future.delayed(1000.ms);
+    if (_accessToken != null) {
+      // ignore: use_build_context_synchronously
+      context.pushReplacement(
+        '/landing-page/0',
+      );
+      return;
+    }
+
     // ignore: use_build_context_synchronously
-    context.pushReplacementNamed('login-auth', extra: "splash-tag");
+    context.replaceNamed('login-auth', extra: "splash-tag");
     print("GO TO LOGIN");
   }
 

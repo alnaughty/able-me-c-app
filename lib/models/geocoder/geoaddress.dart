@@ -58,34 +58,37 @@ class GeoAddress {
 
   /// Creates an address from a map containing its properties.
   GeoAddress.fromMap(Map map)
-      : this.coordinates = Coordinates.fromMap(map["coordinates"]),
-        this.addressLine = map["addressLine"],
-        this.countryName = map["countryName"],
-        this.countryCode = map["countryCode"],
-        this.featureName = map["featureName"],
-        this.postalCode = map["postalCode"],
-        this.locality = map["locality"],
-        this.subLocality = map["subLocality"],
-        this.adminArea = map["adminArea"],
-        this.adminAreaCode = map["adminAreaCode"],
-        this.subAdminArea = map["subAdminArea"],
-        this.thoroughfare = map["thoroughfare"],
-        this.subThoroughfare = map["subThoroughfare"];
+      : coordinates = Coordinates.fromMap(map["coordinates"]),
+        addressLine = map["addressLine"],
+        countryName = map["countryName"],
+        countryCode = map["countryCode"],
+        featureName = map["featureName"],
+        postalCode = map["postalCode"],
+        locality = map["locality"],
+        subLocality = map["subLocality"],
+        adminArea = map["adminArea"],
+        adminAreaCode = map["adminAreaCode"],
+        subAdminArea = map["subAdminArea"],
+        thoroughfare = map["thoroughfare"],
+        subThoroughfare = map["subThoroughfare"];
 
   /// Creates a map from the address properties.
   Map toMap() => {
-        "coordinates": this.coordinates?.toMap(),
-        "addressLine": this.addressLine,
-        "countryName": this.countryName,
-        "countryCode": this.countryCode,
-        "featureName": this.featureName,
-        "postalCode": this.postalCode,
-        "locality": this.locality,
-        "subLocality": this.subLocality,
-        "adminArea": this.adminArea,
-        "adminAreaCode": this.adminAreaCode,
-        "subAdminArea": this.subAdminArea,
-        "thoroughfare": this.thoroughfare,
-        "subThoroughfare": this.subThoroughfare,
+        "coordinates": coordinates?.toMap(),
+        "addressLine": addressLine,
+        "countryName": countryName,
+        "countryCode": countryCode,
+        "featureName": featureName,
+        "postalCode": postalCode,
+        "locality": locality,
+        "subLocality": subLocality,
+        "adminArea": adminArea,
+        "adminAreaCode": adminAreaCode,
+        "subAdminArea": subAdminArea,
+        "thoroughfare": thoroughfare,
+        "subThoroughfare": subThoroughfare,
       };
+
+  @override
+  String toString() => "${toMap()}";
 }

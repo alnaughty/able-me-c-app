@@ -5,13 +5,16 @@ import 'dart:io';
 
 import 'package:able_me/models/geocoder/coordinates.dart';
 import 'package:able_me/models/geocoder/geoaddress.dart';
+import 'package:able_me/services/app_src/env_service.dart';
 import 'package:able_me/services/geocoder_services/src/base.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Geocoding and reverse geocoding through requests to Google APIs.
 class GoogleGeocoding implements Geocoding {
+  static final EnvService _env = EnvService.instance;
   static const _host = 'https://maps.google.com/maps/api/geocode/json';
 
-  final String apiKey = '';
+  final String apiKey = _env.mapApiKey;
   final String? language;
   final Map<String, Object>? headers;
   final bool preserveHeaderCase;
