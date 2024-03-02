@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:able_me/app_config/palette.dart';
 import 'package:able_me/helpers/auth/auth_helper.dart';
+import 'package:able_me/helpers/context_ext.dart';
 import 'package:able_me/helpers/globals.dart';
 import 'package:able_me/view_models/auth/user_provider.dart';
 import 'package:able_me/views/authentication/login_with_socmed.dart';
@@ -72,7 +73,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final TextTheme fontTheme = Theme.of(context).textTheme;
-
+    final Color textColor = context.theme.secondaryHeaderColor;
     return Stack(
       children: [
         Positioned.fill(
@@ -106,17 +107,19 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                 child: logo(size.width * .4),
                               ),
                             },
+                            const Gap(10),
                             Text(
                               "ABLE ME",
-                              style: fontTheme.headlineLarge!.copyWith(
-                                color: Colors.grey.shade800,
-                                fontWeight: FontWeight.w600,
+                              style: fontTheme.displayLarge!.copyWith(
+                                color: purplePalette,
+                                fontFamily: "Lokanova",
+                                // fontWeight: FontWeight.w600,
                               ),
                             ).animate().slideY(duration: 500.ms).fadeIn(),
                             Text(
                               "Inclusive Transportation",
                               style: fontTheme.bodyLarge!.copyWith(
-                                color: Colors.grey.shade600,
+                                color: textColor,
                               ),
                             )
                                 .animate(delay: 400.ms)
@@ -132,7 +135,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                           Text(
                             "LOGIN",
                             style: fontTheme.headlineLarge!.copyWith(
-                              color: greenPalette.shade900,
+                              color: textColor,
                               fontWeight: FontWeight.w700,
                             ),
                           )
@@ -142,7 +145,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                           Text(
                             "Use your email or continue with social to login your account",
                             style: fontTheme.titleMedium!.copyWith(
-                                color: Colors.black.withOpacity(.5),
+                                color: textColor.withOpacity(.5),
                                 fontWeight: FontWeight.w400,
                                 height: 1),
                           )
@@ -164,6 +167,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                 FormBuilderValidators.required(),
                                 FormBuilderValidators.email(),
                               ]),
+                              style: TextStyle(color: textColor),
                               onEditingComplete: () async {
                                 print("Complete");
                                 // if (_email.text.isValidEmail) {
@@ -181,15 +185,20 @@ class _LoginPageState extends ConsumerState<LoginPage>
                               },
                               keyboardType: TextInputType.emailAddress,
                               decoration: InputDecoration(
+                                hintStyle:
+                                    TextStyle(color: textColor.withOpacity(.5)),
+                                labelStyle:
+                                    TextStyle(color: textColor.withOpacity(1)),
                                 hintText: "example@email.com",
                                 label: const Text("Email"),
                                 suffixIcon: IconButton(
                                   onPressed: () {
                                     _email.clear();
                                   },
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.close,
                                     size: 15,
+                                    color: textColor.withOpacity(.5),
                                   ),
                                 ),
                               ),
@@ -199,6 +208,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                 .slideY(begin: 1, end: 0),
                             const Gap(10),
                             TextFormField(
+                              style: TextStyle(color: textColor),
                               controller: _password,
                               focusNode: _passwordNode,
                               // autovalidateMode: AutovalidateMode.always,
@@ -224,6 +234,10 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                 hintText: "Password",
                                 // hintText: "⁕⁕⁕⁕⁕",
                                 label: const Text("Password"),
+                                hintStyle:
+                                    TextStyle(color: textColor.withOpacity(.5)),
+                                labelStyle:
+                                    TextStyle(color: textColor.withOpacity(1)),
                                 suffixIcon: IconButton(
                                   onPressed: () {
                                     isObscured = !isObscured;
@@ -234,6 +248,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                         ? Icons.visibility_outlined
                                         : Icons.visibility_off_outlined,
                                     size: 15,
+                                    color: textColor.withOpacity(.5),
                                   ),
                                 ),
                               ),
@@ -298,7 +313,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                           Expanded(
                             child: Divider(
                               thickness: .5,
-                              color: Colors.black.withOpacity(.5),
+                              color: textColor.withOpacity(.5),
                             ),
                           ),
                           Container(
@@ -307,14 +322,14 @@ class _LoginPageState extends ConsumerState<LoginPage>
                               child: Text(
                                 "OR",
                                 style: fontTheme.bodyMedium!.copyWith(
-                                  color: Colors.black,
+                                  color: textColor,
                                   fontWeight: FontWeight.w500,
                                 ),
                               )),
                           Expanded(
                             child: Divider(
                               thickness: .5,
-                              color: Colors.black.withOpacity(.5),
+                              color: textColor.withOpacity(.5),
                             ),
                           )
                         ],
@@ -328,7 +343,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                         text: TextSpan(
                           text: "New to our platform? ",
                           style: TextStyle(
-                            color: Colors.grey.shade900,
+                            color: textColor,
                             fontSize: 15,
                             fontFamily: "Montserrat",
                           ),

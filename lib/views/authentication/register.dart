@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:able_me/app_config/palette.dart';
+import 'package:able_me/helpers/context_ext.dart';
 import 'package:able_me/helpers/globals.dart';
 import 'package:able_me/views/authentication/login_with_socmed.dart';
 import 'package:able_me/views/authentication/register_details.dart';
@@ -79,6 +80,7 @@ class _RegisterPageState extends State<RegisterPage> with ColorPalette {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final Color textColor = context.theme.secondaryHeaderColor;
     final TextTheme fontTheme = Theme.of(context).textTheme;
     return Stack(
       children: [
@@ -111,15 +113,16 @@ class _RegisterPageState extends State<RegisterPage> with ColorPalette {
                             ),
                             Text(
                               "ABLE ME",
-                              style: fontTheme.headlineLarge!.copyWith(
-                                color: Colors.grey.shade800,
-                                fontWeight: FontWeight.w600,
+                              style: fontTheme.displayLarge!.copyWith(
+                                color: purplePalette,
+                                fontFamily: "Lokanova",
+                                // fontWeight: FontWeight.w600,
                               ),
                             ).animate().slideY(duration: 500.ms).fadeIn(),
                             Text(
                               "Inclusive Transportation",
                               style: fontTheme.bodyLarge!.copyWith(
-                                color: Colors.grey.shade600,
+                                color: textColor,
                               ),
                             )
                                 .animate(delay: 400.ms)
@@ -132,7 +135,7 @@ class _RegisterPageState extends State<RegisterPage> with ColorPalette {
                       Text(
                         "REGISTER",
                         style: fontTheme.headlineLarge!.copyWith(
-                          color: greenPalette.shade900,
+                          color: textColor,
                           fontWeight: FontWeight.w700,
                         ),
                       )
@@ -178,8 +181,13 @@ class _RegisterPageState extends State<RegisterPage> with ColorPalette {
                                   }
                                 },
                                 keyboardType: TextInputType.emailAddress,
+                                style: TextStyle(color: textColor),
                                 decoration: InputDecoration(
                                   hintText: "example@email.com",
+                                  hintStyle: TextStyle(
+                                      color: textColor.withOpacity(.5)),
+                                  labelStyle: TextStyle(
+                                      color: textColor.withOpacity(1)),
                                   label: const Text("Email"),
                                   suffixIcon: IconButton(
                                     onPressed: () {
@@ -202,6 +210,7 @@ class _RegisterPageState extends State<RegisterPage> with ColorPalette {
                                 TextFormField(
                                   controller: _password,
                                   focusNode: _passwordNode,
+                                  style: TextStyle(color: textColor),
                                   // autovalidateMode: AutovalidateMode.always,
                                   validator: FormBuilderValidators.compose([
                                     FormBuilderValidators.required(),
@@ -232,10 +241,14 @@ class _RegisterPageState extends State<RegisterPage> with ColorPalette {
                                   },
                                   keyboardType: TextInputType.visiblePassword,
                                   obscureText: isObscured,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
+                                    hintStyle: TextStyle(
+                                        color: textColor.withOpacity(.5)),
+                                    labelStyle: TextStyle(
+                                        color: textColor.withOpacity(1)),
                                     hintText: "∗∗∗∗∗",
                                     // hintText: "⁕⁕⁕⁕⁕",
-                                    label: Text("Password"),
+                                    label: const Text("Password"),
                                   ),
                                 )
                                     .animate()
@@ -243,6 +256,7 @@ class _RegisterPageState extends State<RegisterPage> with ColorPalette {
                                     .slideY(begin: 1, end: 0),
                                 const Gap(10),
                                 TextFormField(
+                                  style: TextStyle(color: textColor),
                                   controller: _confpassword,
                                   focusNode: _confpasswordNode,
                                   onChanged: (text) {
@@ -277,10 +291,14 @@ class _RegisterPageState extends State<RegisterPage> with ColorPalette {
                                   },
                                   keyboardType: TextInputType.visiblePassword,
                                   obscureText: isObscured,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
+                                    hintStyle: TextStyle(
+                                        color: textColor.withOpacity(.5)),
+                                    labelStyle: TextStyle(
+                                        color: textColor.withOpacity(1)),
                                     hintText: "∗∗∗∗∗",
                                     // hintText: "⁕⁕⁕⁕⁕",
-                                    label: Text("Confirm Password"),
+                                    label: const Text("Confirm Password"),
                                   ),
                                 )
                                     .animate()
@@ -304,8 +322,7 @@ class _RegisterPageState extends State<RegisterPage> with ColorPalette {
                           Text(
                             "Show Password",
                             style: fontTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
+                                fontWeight: FontWeight.w500, color: textColor),
                           )
                         ],
                       ),
@@ -314,7 +331,7 @@ class _RegisterPageState extends State<RegisterPage> with ColorPalette {
                         text: TextSpan(
                           text: "Already have an account but forgot password? ",
                           style: TextStyle(
-                            color: Colors.grey.shade900,
+                            color: textColor,
                             fontSize: 15,
                             fontFamily: "Montserrat",
                           ),
@@ -400,7 +417,7 @@ class _RegisterPageState extends State<RegisterPage> with ColorPalette {
                         text: TextSpan(
                           text: "Already have an account? ",
                           style: TextStyle(
-                            color: Colors.grey.shade800,
+                            color: textColor,
                             fontSize: 15,
                             fontFamily: "Montserrat",
                           ),

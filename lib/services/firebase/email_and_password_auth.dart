@@ -89,4 +89,23 @@ class FirebaseEmailPasswordAuth {
       return null;
     }
   }
+
+  Future<void> logout() async {
+    try {
+      return await auth.signOut();
+    } on SocketException {
+      Fluttertoast.showToast(msg: "No internet connection");
+      return;
+    } on HttpException {
+      Fluttertoast.showToast(
+          msg: "An unexpected error occurred while processing the request");
+      return;
+    } on FormatException catch (e) {
+      Fluttertoast.showToast(msg: "Format error : $e");
+      return;
+    } on TimeoutException {
+      Fluttertoast.showToast(msg: "No internet connection : timeout");
+      return;
+    }
+  }
 }

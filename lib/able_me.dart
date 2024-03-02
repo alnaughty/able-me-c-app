@@ -33,10 +33,17 @@ class AbleMeApp extends StatelessWidget with ColorPalette {
             ),
             cardColor: Colors.grey.shade900,
             inputDecorationTheme: InputDecorationTheme(
-              border: OutlineInputBorder(
+              focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(60),
                 borderSide: BorderSide(
-                  width: .5,
+                  width: 2,
+                  color: purplePalette,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(60),
+                borderSide: BorderSide(
+                  width: 1,
                   color: Colors.white.withOpacity(.5),
                 ),
               ),
@@ -70,10 +77,17 @@ class AbleMeApp extends StatelessWidget with ColorPalette {
 
             // for textfield decoration
             inputDecorationTheme: InputDecorationTheme(
-              border: OutlineInputBorder(
+              focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(60),
                 borderSide: BorderSide(
-                  width: .5,
+                  width: 2,
+                  color: purplePalette,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(60),
+                borderSide: BorderSide(
+                  width: 1,
                   color: Colors.black.withOpacity(.5),
                 ),
               ),

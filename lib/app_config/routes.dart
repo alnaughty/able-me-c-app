@@ -1,4 +1,5 @@
 import 'package:able_me/views/authentication/forgot_password_page.dart';
+import 'package:able_me/views/authentication/kyc_page.dart';
 import 'package:able_me/views/authentication/login.dart';
 import 'package:able_me/views/authentication/recovery_code.dart';
 import 'package:able_me/views/authentication/register.dart';
@@ -40,6 +41,21 @@ class RouteConfig {
           type: ZTransitionAnim.fade,
         ),
         routes: <RouteBase>[
+          GoRoute(
+            name: 'kyc',
+            path: 'kyc',
+            pageBuilder: (BuildContext context, GoRouterState state) {
+              return buildPageWithDefaultTransition(
+                context: context,
+                state: state,
+                child: const KYCPage(),
+                type: ZTransitionAnim.slideLR,
+              );
+              // return LoginPage(
+              //   tag: tag,
+              // );
+            },
+          ),
           GoRoute(
             name: 'login-auth',
             path: 'login-auth',

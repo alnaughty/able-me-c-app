@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:able_me/app_config/palette.dart';
+import 'package:able_me/helpers/context_ext.dart';
 import 'package:able_me/helpers/globals.dart';
 import 'package:able_me/views/authentication/login_with_socmed.dart';
 import 'package:flutter/gestures.dart';
@@ -45,6 +46,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final TextTheme fontTheme = Theme.of(context).textTheme;
+    final Color textColor = context.theme.secondaryHeaderColor;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Stack(
@@ -74,15 +76,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                           ),
                           Text(
                             "ABLE ME",
-                            style: fontTheme.headlineLarge!.copyWith(
-                              color: Colors.grey.shade800,
-                              fontWeight: FontWeight.w600,
+                            style: fontTheme.displayLarge!.copyWith(
+                              color: purplePalette,
+                              fontFamily: "Lokanova",
+                              // fontWeight: FontWeight.w600,
                             ),
                           ).animate().slideY(duration: 500.ms).fadeIn(),
                           Text(
                             "Inclusive Transportation",
                             style: fontTheme.bodyLarge!.copyWith(
-                              color: Colors.grey.shade600,
+                              color: textColor,
                             ),
                           )
                               .animate(delay: 400.ms)
@@ -98,7 +101,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                         Text(
                           "ACCOUNT",
                           style: fontTheme.headlineLarge!.copyWith(
-                            color: greenPalette.shade900,
+                            color: textColor,
                             fontWeight: FontWeight.w700,
                           ),
                         )
@@ -108,7 +111,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                         Text(
                           "RECOVERY",
                           style: fontTheme.headlineLarge!.copyWith(
-                            color: greenPalette.shade900,
+                            color: textColor,
                             fontWeight: FontWeight.w700,
                           ),
                         )
@@ -118,7 +121,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                         Text(
                           "Trouble logging in? No problem! Enter your email associated to your account to reset your password and get back to enjoying our services.",
                           style: fontTheme.titleMedium!.copyWith(
-                              color: Colors.black,
+                              color: textColor.withOpacity(.5),
                               fontWeight: FontWeight.w400,
                               height: 1),
                         )
@@ -146,9 +149,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                             sendCode();
                           }
                         },
+                        style: TextStyle(color: textColor),
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           hintText: "example@email.com",
+                          hintStyle:
+                              TextStyle(color: textColor.withOpacity(.5)),
+                          labelStyle:
+                              TextStyle(color: textColor.withOpacity(1)),
                           label: const Text("Email"),
                           suffixIcon: IconButton(
                             onPressed: () {
@@ -229,7 +237,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                         Expanded(
                           child: Divider(
                             thickness: .5,
-                            color: Colors.black.withOpacity(.5),
+                            color: textColor.withOpacity(.5),
                           ),
                         ),
                         Container(
@@ -237,14 +245,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                             child: Text(
                               "OR",
                               style: fontTheme.bodyMedium!.copyWith(
-                                color: Colors.black,
+                                color: textColor,
                                 fontWeight: FontWeight.w500,
                               ),
                             )),
                         Expanded(
                           child: Divider(
                             thickness: .5,
-                            color: Colors.black.withOpacity(.5),
+                            color: textColor.withOpacity(.5),
                           ),
                         )
                       ],
@@ -258,7 +266,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                       text: TextSpan(
                         text: "Email already unavailable? ",
                         style: TextStyle(
-                          color: Colors.grey.shade900,
+                          color: textColor,
                           fontSize: 15,
                           fontFamily: "Montserrat",
                         ),
@@ -292,6 +300,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
           SafeArea(
             bottom: false,
             child: BackButton(
+              color: textColor,
               onPressed: () {
                 context.pop();
               },
@@ -306,7 +315,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
           if (isLoading) ...{
             Positioned.fill(
               child: Container(
-                color: Colors.black.withOpacity(.5),
+                color: textColor.withOpacity(.5),
                 child: Center(
                   child: CircularProgressIndicator.adaptive(
                     valueColor: const AlwaysStoppedAnimation(Colors.white),

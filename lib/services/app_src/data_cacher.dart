@@ -38,5 +38,6 @@ class DataCacher {
     await _prefs.setString("access-token", token);
   }
 
+  // remove user token
   Future<void> removeToken() async => await _prefs.remove("access-token");
 }

@@ -1,3 +1,5 @@
+import 'package:able_me/app_config/palette.dart';
+import 'package:able_me/helpers/context_ext.dart';
 import 'package:able_me/services/app_src/data_cacher.dart';
 import 'package:able_me/view_models/auth/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +15,10 @@ class SplashScreen extends ConsumerStatefulWidget {
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen> with ColorPalette {
   final DataCacher _cacher = DataCacher.instance;
   Future<void> initCheck() async {
+    await _cacher.removeToken();
     final String? _accessToken = _cacher.getUserToken();
     ref.read(accessTokenProvider.notifier).update((state) => _accessToken);
     await Future.delayed(1000.ms);
@@ -27,8 +30,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       return;
     }
 
+    // context.replaceNamed('login-auth', extra: "splash-tag");
     // ignore: use_build_context_synchronously
-    context.replaceNamed('login-auth', extra: "splash-tag");
+    context.replaceNamed('kyc');
     print("GO TO LOGIN");
   }
 
@@ -50,6 +54,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final TextTheme fontTheme = Theme.of(context).textTheme;
+    final Color textColor = context.theme.secondaryHeaderColor;
     return Scaffold(
       body: Align(
         alignment: Alignment.center,
@@ -76,16 +81,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               children: [
                 Text(
                   "ABLE ME",
-                  style: fontTheme.headlineLarge!.copyWith(
-                    color: Colors.grey.shade800,
+                  style: fontTheme.displayLarge!.copyWith(
+                    color: purplePalette,
+                    fontFamily: "Lokanova",
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
                   "Inclusive Transportation",
                   style: fontTheme.bodyLarge!.copyWith(
-                    color: Colors.grey.shade600,
-                  ),
+                      color: textColor.withOpacity(.5),
+                      fontFamily: "Montserrat"),
                 )
               ],
             )

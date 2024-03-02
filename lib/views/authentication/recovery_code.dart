@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:able_me/app_config/palette.dart';
+import 'package:able_me/helpers/context_ext.dart';
 import 'package:able_me/helpers/globals.dart';
 import 'package:able_me/views/authentication/pin_form.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class _RecoveryCodePageState extends State<RecoveryCodePage> with ColorPalette {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final TextTheme fontTheme = Theme.of(context).textTheme;
+    final Color textColor = context.theme.secondaryHeaderColor;
     return Stack(
       children: [
         Positioned.fill(
@@ -58,15 +60,15 @@ class _RecoveryCodePageState extends State<RecoveryCodePage> with ColorPalette {
                           ),
                           Text(
                             "ABLE ME",
-                            style: fontTheme.headlineLarge!.copyWith(
-                              color: Colors.grey.shade800,
-                              fontWeight: FontWeight.w600,
+                            style: fontTheme.displayLarge!.copyWith(
+                              color: purplePalette,
+                              fontFamily: "Lokanova",
                             ),
                           ).animate().slideY(duration: 500.ms).fadeIn(),
                           Text(
                             "Inclusive Transportation",
                             style: fontTheme.bodyLarge!.copyWith(
-                              color: Colors.grey.shade600,
+                              color: textColor,
                             ),
                           )
                               .animate(delay: 400.ms)
@@ -82,7 +84,7 @@ class _RecoveryCodePageState extends State<RecoveryCodePage> with ColorPalette {
                         Text(
                           "RECOVERY",
                           style: fontTheme.headlineLarge!.copyWith(
-                            color: greenPalette.shade900,
+                            color: textColor,
                             fontWeight: FontWeight.w700,
                           ),
                         )
@@ -92,7 +94,7 @@ class _RecoveryCodePageState extends State<RecoveryCodePage> with ColorPalette {
                         Text(
                           "CODE",
                           style: fontTheme.headlineLarge!.copyWith(
-                            color: greenPalette.shade900,
+                            color: textColor,
                             fontWeight: FontWeight.w700,
                           ),
                         )
@@ -102,11 +104,16 @@ class _RecoveryCodePageState extends State<RecoveryCodePage> with ColorPalette {
                         Text.rich(
                           TextSpan(
                               text: "A 5-digit code has been sent to ",
+                              style: TextStyle(
+                                color: textColor,
+                              ),
                               children: [
                                 TextSpan(
                                   text: "example@email.com",
                                   style: TextStyle(
-                                      color: blue, fontWeight: FontWeight.w600),
+                                    color: purplePalette,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                                 const TextSpan(
                                   text:
@@ -205,6 +212,7 @@ class _RecoveryCodePageState extends State<RecoveryCodePage> with ColorPalette {
         SafeArea(
           bottom: false,
           child: BackButton(
+            color: textColor,
             onPressed: () {
               context.pop();
             },
@@ -213,7 +221,7 @@ class _RecoveryCodePageState extends State<RecoveryCodePage> with ColorPalette {
         if (isLoading) ...{
           Positioned.fill(
             child: Container(
-              color: Colors.black.withOpacity(.5),
+              color: textColor.withOpacity(.5),
               child: Center(
                 child: CircularProgressIndicator.adaptive(
                   valueColor: const AlwaysStoppedAnimation(Colors.white),
