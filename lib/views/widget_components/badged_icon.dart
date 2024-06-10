@@ -8,10 +8,12 @@ class BadgedIcon extends StatefulWidget {
       {super.key,
       required this.isBadged,
       required this.iconPath,
+      this.color,
       this.iconSize = 20});
   final bool isBadged;
   final String iconPath;
   final double iconSize;
+  final Color? color;
   @override
   State<BadgedIcon> createState() => _BadgedIconState();
 }
@@ -27,7 +29,7 @@ class _BadgedIconState extends State<BadgedIcon> with ColorPalette {
           icon: SvgPicture.asset(
             widget.iconPath,
             width: widget.iconSize,
-            color: context.theme.secondaryHeaderColor,
+            color: widget.color ?? context.theme.secondaryHeaderColor,
           ),
         ),
         if (widget.isBadged) ...{

@@ -5,6 +5,7 @@ class KYCStatus {
   final String idFront;
   final String idBack;
   final String? reason;
+  final bool isEmailValidated;
   final int status;
   final DateTime uploadedAt;
   const KYCStatus({
@@ -15,6 +16,7 @@ class KYCStatus {
     required this.idBack,
     required this.status,
     required this.uploadedAt,
+    required this.isEmailValidated,
     this.reason,
   });
   factory KYCStatus.fromJson(Map<String, dynamic> json) {
@@ -24,6 +26,7 @@ class KYCStatus {
       selfie: json['selfie'],
       idFront: json['id_front'],
       idBack: json['id_back'],
+      isEmailValidated: json['email_validated'] != null,
       status: int.parse(json['status'].toString()),
       reason: json['reason'],
       uploadedAt: DateTime.parse(json['created_at']),

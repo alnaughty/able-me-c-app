@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "339534952888",
+    "firebase_url": "https://able-me-24704-default-rtdb.firebaseio.com",
     "project_id": "able-me-24704",
     "storage_bucket": "able-me-24704.appspot.com"
   },
@@ -14,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "339534952888-5mijsecq65hgn0oh33qol955msd2mlr1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alnaughtech.able_me",
+            "certificate_hash": "216f4fd526a8e80657e531fbd3d0833fca905ba9"
+          }
+        },
+        {
           "client_id": "339534952888-jiks19ts0lmpo59ds41tfjuf1nf7jfpn.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -21,6 +30,48 @@
       "api_key": [
         {
           "current_key": "AIzaSyBGnzS61Ka4lQ87GKtNLSDh9HM_9Yyur4w"
+        },
+        {
+          "current_key": "AIzaSyAXlItCVgGPX0t59RTlDdtS-_tOK9DKIGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "339534952888-jiks19ts0lmpo59ds41tfjuf1nf7jfpn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "339534952888-3oriesj03qv9n2qk3pt13hmoi0qpbpjt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.alnaughtech.ableMe"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:339534952888:android:5d4b00d91776395524774d",
+        "android_client_info": {
+          "package_name": "com.theablehub.able_me_portal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "339534952888-jiks19ts0lmpo59ds41tfjuf1nf7jfpn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGnzS61Ka4lQ87GKtNLSDh9HM_9Yyur4w"
+        },
+        {
+          "current_key": "AIzaSyAXlItCVgGPX0t59RTlDdtS-_tOK9DKIGI"
         }
       ],
       "services": {

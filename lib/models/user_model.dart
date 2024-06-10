@@ -10,7 +10,8 @@ class UserModel {
   final int accountType;
   final bool isSenior;
   final String fullname;
-
+  final bool isKYCVerified;
+  final bool isEmailVerified;
   const UserModel({
     required this.id,
     required this.name,
@@ -23,23 +24,25 @@ class UserModel {
     required this.accountType,
     required this.isSenior,
     required this.fullname,
+    required this.isKYCVerified,
+    required this.isEmailVerified,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        id: json["id"],
-        name: json["name"],
-        email: json["email"],
-        avatar: json['avatar'],
-        lastName: json['lastname'],
-        birthdate: json['birthday'] == null
-            ? null
-            : DateTime.tryParse(json['birthday']),
-        phone: json['phone_number'],
-        hasDisabilityCard: json['is_disability'] == 1,
-        accountType: json['account_type'],
-        isSenior: json['is_senior'] == 1,
-        fullname: json['fullname'],
-      );
+      id: json["id"],
+      name: json["name"],
+      email: json["email"],
+      avatar: json['avatar'],
+      lastName: json['lastname'],
+      birthdate:
+          json['birthday'] == null ? null : DateTime.tryParse(json['birthday']),
+      phone: json['phone_number'],
+      hasDisabilityCard: json['is_disability'] == 1,
+      accountType: json['account_type'],
+      isSenior: json['is_senior'] == 1,
+      fullname: json['fullname'],
+      isEmailVerified: json['is_email_verfied'] == 1,
+      isKYCVerified: json['is_verified'] == 1);
 
   @override
   String toString() {
@@ -66,18 +69,21 @@ class UserModel {
     int? accountType,
     DateTime? birthdate,
     String? phone,
+    bool? isKYCVerified,
+    bool? isEmailVerified,
   }) =>
       UserModel(
-        id: id,
-        name: name ?? this.name,
-        email: email,
-        avatar: avatar,
-        lastName: lastName ?? this.lastName,
-        birthdate: birthdate,
-        phone: phone,
-        hasDisabilityCard: hasDisabilityCard ?? this.hasDisabilityCard,
-        accountType: accountType ?? this.accountType,
-        isSenior: isSenior ?? this.isSenior,
-        fullname: fullname,
-      );
+          id: id,
+          name: name ?? this.name,
+          email: email,
+          avatar: avatar,
+          lastName: lastName ?? this.lastName,
+          birthdate: birthdate,
+          phone: phone,
+          hasDisabilityCard: hasDisabilityCard ?? this.hasDisabilityCard,
+          accountType: accountType ?? this.accountType,
+          isSenior: isSenior ?? this.isSenior,
+          fullname: fullname,
+          isKYCVerified: isKYCVerified ?? this.isKYCVerified,
+          isEmailVerified: isEmailVerified ?? this.isEmailVerified);
 }

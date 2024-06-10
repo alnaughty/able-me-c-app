@@ -10,10 +10,11 @@ import 'package:http/http.dart' as http;
 class KYCService extends Network {
   Future<KYCStatus?> getKYCStatus(String accessToken) async {
     try {
-      return await http.get("$endpoint/api/kyc".toUri, headers: {
+      return await http.get("$endpoint/kyc".toUri, headers: {
         "Accept": "application/json",
         HttpHeaders.authorizationHeader: "Bearer $accessToken",
       }).then((response) {
+        print("TOKEN: $accessToken");
         if (response.statusCode == 200) {
           var data = json.decode(response.body);
           // print("KYC DATA $data");
@@ -28,6 +29,53 @@ class KYCService extends Network {
     } catch (e, s) {
       print("ERROR : $e $s");
       return null;
+    }
+  }
+
+  Future<bool> sendValidationCode(String accessToken,
+      {required String email, required String code}) async {
+    try {
+      return await http
+          .post("${endpoint}emailverification/verify".toUri, headers: {
+        "Accept": "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $accessToken",
+      }, body: {
+        "email": email,
+        "code": code,
+      }).then((response) {
+        if (response.statusCode == 200) {
+          Fluttertoast.showToast(msg: "Email Validated");
+          return true;
+        }
+        print("RESPONSE ${response.statusCode}");
+        return false;
+      });
+    } catch (e, s) {
+      print("ERRORS : $e, $s");
+      return false;
+    }
+  }
+
+  Future<bool> sendEmailVerificationCode(
+      String accessToken, String email) async {
+    try {
+      return await http
+          .post("${endpoint}emailverification/send-code".toUri, headers: {
+        "Accept": "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $accessToken",
+      }, body: {
+        "email": email,
+      }).then((response) {
+        if (response.statusCode == 200) {
+          Fluttertoast.showToast(msg: "Email verification sent");
+          return true;
+        }
+        print("RESPONSE ${response.statusCode}");
+        return false;
+      });
+    } catch (e, s) {
+      print("ERRORS : $e, $s");
+      return false;
     }
   }
 

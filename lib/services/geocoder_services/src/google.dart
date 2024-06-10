@@ -1,12 +1,12 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 
-import 'package:able_me/models/geocoder/coordinates.dart';
+import 'package:able_me/models/geocoder/coordinates.dart' as c;
 import 'package:able_me/models/geocoder/geoaddress.dart';
 import 'package:able_me/services/app_src/env_service.dart';
 import 'package:able_me/services/geocoder_services/src/base.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Geocoding and reverse geocoding through requests to Google APIs.
@@ -29,9 +29,18 @@ class GoogleGeocoding implements Geocoding {
 
   @override
   Future<List<GeoAddress>> findAddressesFromCoordinates(
-      Coordinates coordinates) async {
+      c.Coordinates coordinates) async {
     final url =
         '$_host?key=$apiKey${language != null ? '&language=${language!}' : ''}&latlng=${coordinates.latitude},${coordinates.longitude}';
+    return await _send(url) ?? const <GeoAddress>[];
+  }
+
+  @override
+  Future<List<GeoAddress>> findAddressesFromGeoPoint(
+      GeoPoint coordinates) async {
+    final url =
+        '$_host?key=$apiKey${language != null ? '&language=${language!}' : ''}&latlng=${coordinates.latitude},${coordinates.longitude}';
+    // return await _send(url) ?? const <GeoAddress>[];
     return await _send(url) ?? const <GeoAddress>[];
   }
 
@@ -45,7 +54,7 @@ class GoogleGeocoding implements Geocoding {
   Future<List<GeoAddress>?> _send(String url) async {
     //print("Sending $url...");
     final uri = Uri.parse(url);
-    final request = await this._httpClient.getUrl(uri);
+    final request = await _httpClient.getUrl(uri);
     if (headers != null) {
       headers!.forEach((key, value) {
         request.headers.add(key, value, preserveHeaderCase: preserveHeaderCase);

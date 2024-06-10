@@ -7,3 +7,14 @@ extension VALIDATOR on String {
 
   Uri get toUri => Uri.parse(this);
 }
+
+extension CapitalizeFirstLetter on String {
+  String capitalizeWords() {
+    List<String> words = split(" ");
+    for (int i = 0; i < words.length; i++) {
+      String word = words[i];
+      words[i] = "${word[0].toUpperCase()}${word.substring(1)}";
+    }
+    return words.join(" ");
+  }
+}

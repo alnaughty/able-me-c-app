@@ -1,9 +1,18 @@
 import 'package:able_me/views/authentication/forgot_password_page.dart';
+import 'package:able_me/views/authentication/kyc_children/verify_email_page.dart';
 import 'package:able_me/views/authentication/kyc_page.dart';
 import 'package:able_me/views/authentication/login.dart';
 import 'package:able_me/views/authentication/recovery_code.dart';
 import 'package:able_me/views/authentication/register.dart';
 import 'package:able_me/views/landing_page/children/ableme_map.dart';
+import 'package:able_me/views/landing_page/children/home_page_components/foods/browse_restaurant_page.dart';
+import 'package:able_me/views/landing_page/children/home_page_components/foods/menu/menu_details.dart';
+import 'package:able_me/views/landing_page/children/home_page_components/foods/restaurant_details_page.dart';
+import 'package:able_me/views/landing_page/children/home_page_components/medicine/browse_pharmacy_page.dart';
+import 'package:able_me/views/landing_page/children/home_page_components/ride_chosen/hourly_ride/hourly_ride.dart';
+import 'package:able_me/views/landing_page/children/home_page_components/ride_chosen/rider_details.dart';
+import 'package:able_me/views/landing_page/children/home_page_components/ride_chosen/scheduled/scheduled_ride.dart';
+import 'package:able_me/views/landing_page/children/navigation_page.dart';
 import 'package:able_me/views/landing_page/landing_page.dart';
 import 'package:able_me/views/splash_screen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -16,7 +25,7 @@ class GoRouterObserver extends NavigatorObserver {
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    analytics.setCurrentScreen(screenName: route.settings.name);
+    analytics.logScreenView(screenName: route.settings.name);
   }
 }
 
@@ -49,6 +58,23 @@ class RouteConfig {
                 context: context,
                 state: state,
                 child: const KYCPage(),
+                type: ZTransitionAnim.slideLR,
+              );
+              // return LoginPage(
+              //   tag: tag,
+              // );
+            },
+          ),
+          GoRoute(
+            name: 'code-validation',
+            path: 'code-validation',
+            pageBuilder: (BuildContext context, GoRouterState state) {
+              return buildPageWithDefaultTransition(
+                context: context,
+                state: state,
+                child: VerifyEmailPage(
+                  email: state.extra as String,
+                ),
                 type: ZTransitionAnim.slideLR,
               );
               // return LoginPage(
@@ -114,13 +140,25 @@ class RouteConfig {
         ],
       ),
       GoRoute(
-        path: '/landing-page/:index',
+        path: '/landing-page',
+        name: 'landing-page',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithDefaultTransition(
+            context: context,
+            state: state,
+            child: const LandingPage(),
+            type: ZTransitionAnim.slideLR,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/navigation-page/:index',
         pageBuilder: (BuildContext context, GoRouterState state) {
           print(state.fullPath);
           return buildPageWithDefaultTransition(
             context: context,
             state: state,
-            child: LandingPage(
+            child: NavigationPage(
               initIndex: int.parse(state.pathParameters['index'] ?? "0"),
             ),
             type: ZTransitionAnim.slideLR,
@@ -128,17 +166,102 @@ class RouteConfig {
         },
       ),
       GoRoute(
-        path: '/map-page/:id/:coordinates',
+        path: '/rider-details-page/:id/:type',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithDefaultTransition(
+            context: context,
+            state: state,
+            child: RiderDetails(
+              id: int.parse(state.pathParameters['id']!),
+              bookingType: int.parse(
+                state.pathParameters['type']!,
+              ),
+            ),
+            type: ZTransitionAnim.slideLR,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/menu-details/:id',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithDefaultTransition(
+            context: context,
+            state: state,
+            child: MenuDetailsPage(
+              id: int.parse(state.pathParameters['id']!),
+            ),
+            type: ZTransitionAnim.slideLR,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/restaurant-details/:id',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithDefaultTransition(
+            context: context,
+            state: state,
+            child: RestaurantDetails(
+              id: int.parse(state.pathParameters['id']!),
+            ),
+            type: ZTransitionAnim.slideLR,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/browse-restaurants',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithDefaultTransition(
+            context: context,
+            state: state,
+            child: const BrowseRestaurantPage(),
+            type: ZTransitionAnim.slideLR,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/browse-pharmacies',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithDefaultTransition(
+            context: context,
+            state: state,
+            child: const BrowsePharmacyPage(),
+            type: ZTransitionAnim.slideLR,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/scheduled-ride-booking',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithDefaultTransition(
+            context: context,
+            state: state,
+            child: const ScheduledRide(),
+            type: ZTransitionAnim.slideLR,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/hourly-ride-booking',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithDefaultTransition(
+            context: context,
+            state: state,
+            child: const HourlyRidePage(),
+            type: ZTransitionAnim.slideLR,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/map-page',
         pageBuilder: (BuildContext context, GoRouterState state) {
           print(state.fullPath);
           return buildPageWithDefaultTransition(
             context: context,
             state: state,
-            child: AbleMeMapPage(
-              coordinates: state.pathParameters['coordinates']!,
-              uid: int.parse(state.pathParameters['uid']!),
-              // initIndex: int.parse(state.pathParameters['index'] ?? "0"),
-            ),
+            child: const AbleMeMapPage(
+                // uid: int.parse(state.pathParameters['id']!),
+                // initIndex: int.parse(state.pathParameters['index'] ?? "0"),
+                ),
             type: ZTransitionAnim.slideLR,
           );
         },

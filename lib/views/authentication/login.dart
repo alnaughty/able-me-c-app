@@ -6,6 +6,7 @@ import 'package:able_me/helpers/context_ext.dart';
 import 'package:able_me/helpers/globals.dart';
 import 'package:able_me/view_models/auth/user_provider.dart';
 import 'package:able_me/views/authentication/login_with_socmed.dart';
+import 'package:able_me/views/authentication/register_details.dart';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -31,26 +32,64 @@ class _LoginPageState extends ConsumerState<LoginPage>
   final FocusNode _passwordNode = FocusNode();
   bool isObscured = true;
   bool isLoading = false;
+
   Future<void> login() async {
     FocusScope.of(context).unfocus();
     setState(() {
       isLoading = true;
     });
-    final String? _accessToken = await apiLogin(
+    final User? _user = await getfirebaseUser(
       _email.text,
       _password.text,
     );
+    print("USER : ${_user?.email}");
+    if (_user != null) {
+      await loginUser(_user, false);
+      // accessTokenProvider. = _accessToken;
+    }
     isLoading = false;
     if (mounted) setState(() {});
-    if (_accessToken != null) {
-      // accessTokenProvider. = _accessToken;
-      ref.read(accessTokenProvider.notifier).update((state) => _accessToken);
-      cacher.setUserToken(_accessToken);
-      // ignore: use_build_context_synchronously
-      context.pushReplacement(
-        '/landing-page/0',
-      );
+  }
+
+  Future<void> loginUser(User _user, bool isSocMed) async {
+    final String? tok = await _user.getIdToken();
+
+    if (tok == null) {
+      isLoading = false;
+      if (mounted) setState(() {});
+      return;
     }
+    print("firebase id : $tok");
+    print("FIREBASE UID : ${_user.uid}");
+
+    final String? accessToken = await getAccessToken(tok);
+    if (accessToken == null) {
+      isLoading = false;
+      if (mounted) setState(() {});
+      await showModalBottomSheet(
+        // ignore: use_build_context_synchronously
+        context: context,
+        backgroundColor: Colors.transparent,
+        useSafeArea: true,
+        isScrollControlled: true,
+        // constraints: BoxConstraints(
+        //   maxHeight: MediaQuery.of(context).size.height,
+        // ),
+        builder: (_) => RegistrationDetails(
+          email: isSocMed ? _user.email! : _email.text,
+          password: isSocMed ? "theableme" : _password.text,
+          firebaseToken: tok,
+        ),
+      );
+      return;
+    }
+    ref.watch(accessTokenProvider.notifier).update((state) => accessToken);
+    cacher.setUserToken(accessToken);
+    //ignore: use_build_context_synchronously
+    context.pushReplacement(
+      '/landing-page',
+    );
+    return;
   }
 
   @override
@@ -80,297 +119,300 @@ class _LoginPageState extends ConsumerState<LoginPage>
           child: GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
             child: Scaffold(
-              body: SizedBox(
-                width: size.width,
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: size.width * .05,
-                    vertical: 15,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SafeArea(
-                        bottom: false,
-                        child: Gap(50),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            if (widget.tag == null) ...{
-                              logo(size.width * .4),
-                            } else ...{
-                              Hero(
-                                tag: widget.tag!,
-                                child: logo(size.width * .4),
-                              ),
-                            },
-                            const Gap(10),
-                            Text(
-                              "ABLE ME",
-                              style: fontTheme.displayLarge!.copyWith(
-                                color: purplePalette,
-                                fontFamily: "Lokanova",
-                                // fontWeight: FontWeight.w600,
-                              ),
-                            ).animate().slideY(duration: 500.ms).fadeIn(),
-                            Text(
-                              "Inclusive Transportation",
-                              style: fontTheme.bodyLarge!.copyWith(
-                                color: textColor,
-                              ),
-                            )
-                                .animate(delay: 400.ms)
-                                .slideY(duration: 500.ms)
-                                .fadeIn()
-                          ],
-                        ),
-                      ),
-                      const Gap(20),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+              body: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: size.width * .05,
+                  vertical: 15,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SafeArea(
+                      bottom: false,
+                      child: Gap(50),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            "LOGIN",
-                            style: fontTheme.headlineLarge!.copyWith(
-                              color: textColor,
-                              fontWeight: FontWeight.w700,
+                          if (widget.tag == null) ...{
+                            logo(size.width * .4),
+                          } else ...{
+                            Hero(
+                              tag: widget.tag!,
+                              child: logo(size.width * .4),
                             ),
-                          )
-                              .animate(delay: 400.ms)
-                              .slideX(duration: 500.ms)
-                              .fadeIn(),
+                          },
+                          const Gap(10),
                           Text(
-                            "Use your email or continue with social to login your account",
-                            style: fontTheme.titleMedium!.copyWith(
-                                color: textColor.withOpacity(.5),
-                                fontWeight: FontWeight.w400,
-                                height: 1),
+                            "ABLE ME",
+                            style: fontTheme.displayLarge!.copyWith(
+                              color: purplePalette,
+                              fontFamily: "Lokanova",
+                              // fontWeight: FontWeight.w600,
+                            ),
+                          ).animate().slideY(duration: 500.ms).fadeIn(),
+                          Text(
+                            "Inclusive Transportation",
+                            style: fontTheme.bodyLarge!.copyWith(
+                              color: textColor,
+                            ),
                           )
                               .animate(delay: 400.ms)
                               .slideY(duration: 500.ms)
-                              .fadeIn(),
+                              .fadeIn()
                         ],
                       ),
-                      const Gap(25),
-                      Form(
-                        key: _kForm,
-                        child: Column(
-                          children: [
-                            TextFormField(
-                              focusNode: _emailNode,
-                              controller: _email,
-                              // autovalidateMode: AutovalidateMode.always,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(),
-                                FormBuilderValidators.email(),
-                              ]),
-                              style: TextStyle(color: textColor),
-                              onEditingComplete: () async {
-                                print("Complete");
-                                // if (_email.text.isValidEmail) {
+                    ),
+                    const Gap(20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "LOGIN",
+                          style: fontTheme.headlineLarge!.copyWith(
+                            color: textColor,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )
+                            .animate(delay: 400.ms)
+                            .slideX(duration: 500.ms)
+                            .fadeIn(),
+                        Text(
+                          "Use your email or continue with social to login your account",
+                          style: fontTheme.titleMedium!.copyWith(
+                              color: textColor.withOpacity(.5),
+                              fontWeight: FontWeight.w400,
+                              height: 1),
+                        )
+                            .animate(delay: 400.ms)
+                            .slideY(duration: 500.ms)
+                            .fadeIn(),
+                      ],
+                    ),
+                    const Gap(25),
+                    Form(
+                      key: _kForm,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            focusNode: _emailNode,
+                            controller: _email,
+                            // autovalidateMode: AutovalidateMode.always,
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(),
+                              FormBuilderValidators.email(),
+                            ]),
+                            style: TextStyle(color: textColor),
+                            onEditingComplete: () async {
+                              print("Complete");
+                              // if (_email.text.isValidEmail) {
 
-                                // }
-                                if (_password.text.isEmpty) {
-                                  _passwordNode.requestFocus();
-                                  return;
-                                }
-                                final bool isValidated =
-                                    _kForm.currentState!.validate();
-                                if (isValidated) {
-                                  await login();
-                                }
-                              },
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: InputDecoration(
-                                hintStyle:
-                                    TextStyle(color: textColor.withOpacity(.5)),
-                                labelStyle:
-                                    TextStyle(color: textColor.withOpacity(1)),
-                                hintText: "example@email.com",
-                                label: const Text("Email"),
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    _email.clear();
-                                  },
-                                  icon: Icon(
-                                    Icons.close,
-                                    size: 15,
-                                    color: textColor.withOpacity(.5),
-                                  ),
+                              // }
+                              if (_password.text.isEmpty) {
+                                _passwordNode.requestFocus();
+                                return;
+                              }
+                              final bool isValidated =
+                                  _kForm.currentState!.validate();
+                              if (isValidated) {
+                                await login();
+                              }
+                            },
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: InputDecoration(
+                              hintStyle:
+                                  TextStyle(color: textColor.withOpacity(.5)),
+                              labelStyle:
+                                  TextStyle(color: textColor.withOpacity(1)),
+                              hintText: "example@email.com",
+                              label: const Text("Email"),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  _email.clear();
+                                },
+                                icon: Icon(
+                                  Icons.close,
+                                  size: 15,
+                                  color: textColor.withOpacity(.5),
                                 ),
                               ),
-                            )
-                                .animate()
-                                .fadeIn(duration: 700.ms)
-                                .slideY(begin: 1, end: 0),
-                            const Gap(10),
-                            TextFormField(
-                              style: TextStyle(color: textColor),
-                              controller: _password,
-                              focusNode: _passwordNode,
-                              // autovalidateMode: AutovalidateMode.always,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(),
-                              ]),
-                              onEditingComplete: () async {
-                                final bool isValidated =
-                                    _kForm.currentState!.validate();
-                                if (_email.text.isEmpty) {
-                                  _emailNode.requestFocus();
-                                  return;
-                                }
+                            ),
+                          )
+                              .animate()
+                              .fadeIn(duration: 700.ms)
+                              .slideY(begin: 1, end: 0),
+                          const Gap(10),
+                          TextFormField(
+                            style: TextStyle(color: textColor),
+                            controller: _password,
+                            focusNode: _passwordNode,
+                            // autovalidateMode: AutovalidateMode.always,
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(),
+                            ]),
+                            onEditingComplete: () async {
+                              final bool isValidated =
+                                  _kForm.currentState!.validate();
+                              if (_email.text.isEmpty) {
+                                _emailNode.requestFocus();
+                                return;
+                              }
 
-                                if (isValidated) {
-                                  print("VALID");
-                                  await login();
-                                }
-                              },
-                              keyboardType: TextInputType.visiblePassword,
-                              obscureText: isObscured,
-                              decoration: InputDecoration(
-                                hintText: "Password",
-                                // hintText: "⁕⁕⁕⁕⁕",
-                                label: const Text("Password"),
-                                hintStyle:
-                                    TextStyle(color: textColor.withOpacity(.5)),
-                                labelStyle:
-                                    TextStyle(color: textColor.withOpacity(1)),
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    isObscured = !isObscured;
-                                    if (mounted) setState(() {});
-                                  },
-                                  icon: Icon(
-                                    isObscured
-                                        ? Icons.visibility_outlined
-                                        : Icons.visibility_off_outlined,
-                                    size: 15,
-                                    color: textColor.withOpacity(.5),
-                                  ),
+                              if (isValidated) {
+                                print("VALID");
+                                await login();
+                              }
+                            },
+                            keyboardType: TextInputType.visiblePassword,
+                            obscureText: isObscured,
+                            decoration: InputDecoration(
+                              hintText: "Password",
+                              // hintText: "⁕⁕⁕⁕⁕",
+                              label: const Text("Password"),
+                              hintStyle:
+                                  TextStyle(color: textColor.withOpacity(.5)),
+                              labelStyle:
+                                  TextStyle(color: textColor.withOpacity(1)),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  isObscured = !isObscured;
+                                  if (mounted) setState(() {});
+                                },
+                                icon: Icon(
+                                  isObscured
+                                      ? Icons.visibility_outlined
+                                      : Icons.visibility_off_outlined,
+                                  size: 15,
+                                  color: textColor.withOpacity(.5),
                                 ),
                               ),
-                            )
-                                .animate()
-                                .fadeIn(duration: 700.ms)
-                                .slideY(begin: 1, end: 0)
-                          ],
+                            ),
+                          )
+                              .animate()
+                              .fadeIn(duration: 700.ms)
+                              .slideY(begin: 1, end: 0)
+                        ],
+                      ),
+                    ),
+                    TextButton(
+                      style: ButtonStyle(
+                        textStyle: MaterialStateProperty.resolveWith(
+                          (states) => const TextStyle(
+                            decoration: TextDecoration.underline,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                            fontFamily: "Montserrat",
+                          ),
                         ),
                       ),
-                      TextButton(
-                        style: ButtonStyle(
-                          textStyle: MaterialStateProperty.resolveWith(
-                            (states) => const TextStyle(
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
-                              fontFamily: "Montserrat",
-                            ),
+                      onPressed: () {
+                        context.pushNamed('forgot-password');
+                      },
+                      child: const Text(
+                        "Forgot Password?",
+                      ),
+                    )
+                        .animate(delay: 600.ms)
+                        .fadeIn(duration: 700.ms)
+                        .slideY(begin: 1, end: 0),
+                    const Gap(20),
+                    MaterialButton(
+                      height: 60,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(60)),
+                      color: greenPalette,
+                      onPressed: () async {
+                        final bool isValidated =
+                            _kForm.currentState!.validate();
+                        if (isValidated) {
+                          print("VALID");
+                          await login();
+                        }
+                      },
+                      child: Center(
+                        child: Text(
+                          "LOGIN",
+                          style: fontTheme.bodyLarge!.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        onPressed: () {
-                          context.pushNamed('forgot-password');
-                        },
-                        child: const Text(
-                          "Forgot Password?",
-                        ),
-                      )
-                          .animate(delay: 600.ms)
-                          .fadeIn(duration: 700.ms)
-                          .slideY(begin: 1, end: 0),
-                      const Gap(20),
-                      MaterialButton(
-                        height: 60,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(60)),
-                        color: greenPalette,
-                        onPressed: () async {
-                          final bool isValidated =
-                              _kForm.currentState!.validate();
-                          if (isValidated) {
-                            print("VALID");
-                            await login();
-                          }
-                        },
-                        child: Center(
-                          child: Text(
-                            "LOGIN",
-                            style: fontTheme.bodyLarge!.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                            ),
+                      ),
+                    )
+                        .animate(delay: 700.ms)
+                        .fadeIn(duration: 700.ms)
+                        .slideY(begin: 1, end: 0),
+                    const Gap(30),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Divider(
+                            thickness: .5,
+                            color: textColor.withOpacity(.5),
                           ),
                         ),
-                      )
-                          .animate(delay: 700.ms)
-                          .fadeIn(duration: 700.ms)
-                          .slideY(begin: 1, end: 0),
-                      const Gap(30),
-                      Row(
+                        Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Text(
+                              "OR",
+                              style: fontTheme.bodyMedium!.copyWith(
+                                color: textColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )),
+                        Expanded(
+                          child: Divider(
+                            thickness: .5,
+                            color: textColor.withOpacity(.5),
+                          ),
+                        )
+                      ],
+                    ),
+                    const Gap(30),
+                    LoginWithSocMed(
+                      userCallback: (User user) async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await loginUser(user, true);
+                        isLoading = false;
+                        if (mounted) setState(() {});
+                      },
+                    ),
+                    const Gap(25),
+                    RichText(
+                      text: TextSpan(
+                        text: "New to our platform? ",
+                        style: TextStyle(
+                          color: textColor,
+                          fontSize: 15,
+                          fontFamily: "Montserrat",
+                        ),
                         children: [
-                          Expanded(
-                            child: Divider(
-                              thickness: .5,
-                              color: textColor.withOpacity(.5),
-                            ),
-                          ),
-                          Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Text(
-                                "OR",
-                                style: fontTheme.bodyMedium!.copyWith(
-                                  color: textColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              )),
-                          Expanded(
-                            child: Divider(
-                              thickness: .5,
-                              color: textColor.withOpacity(.5),
+                          TextSpan(
+                            text: "Register",
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () async {
+                                context.pushNamed(
+                                  'register',
+                                );
+                              },
+                            style: TextStyle(
+                              color: greenPalette,
+                              fontWeight: FontWeight.w700,
+                              decoration: TextDecoration.underline,
                             ),
                           )
                         ],
                       ),
-                      const Gap(30),
-                      LoginWithSocMed(
-                        loadingCallback: (bool l) {},
-                      ),
-                      const Gap(25),
-                      RichText(
-                        text: TextSpan(
-                          text: "New to our platform? ",
-                          style: TextStyle(
-                            color: textColor,
-                            fontSize: 15,
-                            fontFamily: "Montserrat",
-                          ),
-                          children: [
-                            TextSpan(
-                              text: "Register",
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () async {
-                                  context.pushNamed(
-                                    'register',
-                                  );
-                                },
-                              style: TextStyle(
-                                color: greenPalette,
-                                fontWeight: FontWeight.w700,
-                                decoration: TextDecoration.underline,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      const SafeArea(
-                        top: false,
-                        child: Gap(10),
-                      )
-                    ],
-                  ),
+                    ),
+                    const SafeArea(
+                      top: false,
+                      child: Gap(10),
+                    )
+                  ],
                 ),
               ),
             ),

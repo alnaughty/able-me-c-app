@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:able_me/app_config/palette.dart';
+import 'package:able_me/helpers/auth/auth_helper.dart';
 import 'package:able_me/helpers/context_ext.dart';
 import 'package:able_me/helpers/globals.dart';
 import 'package:able_me/views/authentication/login_with_socmed.dart';
@@ -259,7 +260,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                     ),
                     const Gap(30),
                     LoginWithSocMed(
-                      loadingCallback: (bool l) {},
+                      userCallback: (User value) {},
                     ),
                     const Gap(25),
                     RichText(

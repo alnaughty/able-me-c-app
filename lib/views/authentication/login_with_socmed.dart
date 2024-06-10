@@ -1,16 +1,21 @@
+import 'dart:io';
+
 import 'package:able_me/helpers/color_ext.dart';
 import 'package:able_me/helpers/context_ext.dart';
+import 'package:able_me/services/firebase/apple_auth.dart';
+import 'package:able_me/services/firebase/google_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 
-class LoginWithSocMed extends StatelessWidget {
-  const LoginWithSocMed({super.key, required this.loadingCallback});
-  final ValueChanged<bool> loadingCallback;
+class LoginWithSocMed extends StatelessWidget with GoogleAuth, AppleAuth {
+  LoginWithSocMed({super.key, required this.userCallback});
+  final ValueChanged<User> userCallback;
   Future<void> login() async {
-    loadingCallback(true);
-    await Future.delayed(3000.ms);
-    loadingCallback(false);
+    // loadingCallback(true);
+    // await Future.delayed(3000.ms);
+    // loadingCallback(false);
   }
 
   Widget container(Color textColor, Color bgColor,
@@ -59,10 +64,29 @@ class LoginWithSocMed extends StatelessWidget {
             .fade(duration: 1000.ms)
             .slideY(duration: 1000.ms, begin: 1, end: 0),
         const Gap(10),
-        container(textColor, bgColor, onPressed: () {}, name: "Google")
+        container(textColor, bgColor, onPressed: () async {
+          await googleSignIn().then((value) {
+            if (value != null) {
+              userCallback(value);
+            }
+          });
+        }, name: "Google")
             .animate()
             .fade(duration: 1500.ms)
             .slideY(duration: 1500.ms, begin: 1, end: 0),
+        if (Platform.isIOS) ...{
+          const Gap(10),
+          container(textColor, bgColor, onPressed: () async {
+            await appleSignIn().then((value) {
+              if (value != null) {
+                userCallback(value);
+              }
+            });
+          }, name: "Apple")
+              .animate()
+              .fade(duration: 1550.ms)
+              .slideY(duration: 1500.ms, begin: 1, end: 0),
+        }
       ],
     );
   }

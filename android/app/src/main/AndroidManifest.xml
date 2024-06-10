@@ -2,9 +2,18 @@
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+<uses-feature android:name="android.hardware.camera" />
+<queries>  
+  <intent>  
+      <action android:name="android.intent.action.TTS_SERVICE" />  
+  </intent>  
+ </queries>  
     <application
-        android:label="able_me"
+        android:label="Able Me"
         android:name="${applicationName}"
+        
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
@@ -22,8 +31,6 @@
                  while the Flutter UI initializes. After that, this theme continues
                  to determine the Window background behind the Flutter UI. -->
             
-            <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyDQNF02NTdtd9HDjKvZ_thioJZ_hp8Uz1g"/>
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
@@ -47,5 +54,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBGnzS61Ka4lQ87GKtNLSDh9HM_9Yyur4w"/> -->
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBGnzS61Ka4lQ87GKtNLSDh9HM_9Yyur4w"/>
     </application>
 </manifest>

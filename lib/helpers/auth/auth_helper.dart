@@ -12,11 +12,16 @@ mixin class AuthHelper {
   final UserDataApi _userDataApi = UserDataApi();
   final FirebaseEmailPasswordAuth emailPasswordAuth =
       FirebaseEmailPasswordAuth();
-  final UserAuth _auth = UserAuth();
-  Future<String?> getAccessToken(String firebaseUID) async =>
-      await _auth.signIn(firebaseUID);
+  final UserAuth auth = UserAuth();
+  // final UserAuth _authApi = UserAuth();
 
-  Future<String?> apiLogin(String email, String password) async {
+  Future<String?> getAccessToken(String firebaseUID) async =>
+      await auth.signIn(firebaseUID);
+  Future<User?> getfirebaseUser(String email, String password) async =>
+      await emailPasswordAuth.signIn(email: email, password: password);
+
+  // Future<String?> loginCredentials()
+  Future<String?> firebaseLogin(String email, String password) async {
     final User? user =
         await emailPasswordAuth.signIn(email: email, password: password);
     if (user == null) {

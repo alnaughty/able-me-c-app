@@ -42,11 +42,20 @@ class UserAuth extends Network {
     required String firebaseToken,
   }) async {
     try {
-      return http.post("${endpoint}client/register".toUri,
-          body: {"firebase_token": firebaseToken}).then((response) {
+      return http.post("${endpoint}client/register".toUri, body: {
+        "firebase_token": firebaseToken,
+        "account_type": "$accountType",
+        "email": email,
+        "password": password,
+        "c_password": password,
+        "name": name,
+        "lastname": lastName,
+      }).then((response) {
+        print(response.body);
         if (response.statusCode == 200) {
           final Map<String, dynamic> data = json.decode(response.body);
-          return data['tokenResult']['accessToken'];
+          print("REGISTER DATA : $data");
+          return data['access_token'];
         } else if (response.statusCode == 404) {
           print(response.body);
           Fluttertoast.showToast(msg: "Token expired, please relogin");
@@ -55,6 +64,7 @@ class UserAuth extends Network {
         return null;
       });
     } catch (e) {
+      print("ERROR : $e");
       Fluttertoast.showToast(
           msg: "An unexpected error occurred while trying to authenticate");
       return null;

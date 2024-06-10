@@ -5,21 +5,26 @@ import 'package:able_me/helpers/context_ext.dart';
 import 'package:able_me/helpers/globals.dart';
 import 'package:able_me/views/authentication/login_with_socmed.dart';
 import 'package:able_me/views/authentication/register_details.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
-class RegisterPage extends StatefulWidget {
+import '../../services/firebase/email_and_password_auth.dart';
+
+class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> with ColorPalette {
+class _RegisterPageState extends ConsumerState<RegisterPage> with ColorPalette {
+  final FirebaseEmailPasswordAuth _auth = FirebaseEmailPasswordAuth();
   final GlobalKey<FormState> _kForm = GlobalKey<FormState>();
   late final TextEditingController _email;
   late final TextEditingController _password;
@@ -32,30 +37,50 @@ class _RegisterPageState extends State<RegisterPage> with ColorPalette {
 
   String _pwdText = "";
   String _confPwdText = "";
+
   Future<void> register() async {
+    FocusScope.of(context).unfocus();
+    setState(() {
+      isLoading = true;
+    });
+    print("EMAIL ${_email.text}, PASSWORD: $_pwdText");
+    await _auth
+        .create(email: _email.text, password: _pwdText)
+        .then((value) async {
+      if (value == null) {
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+    });
+  }
+
+  Future<void> registerUser(User user, bool isSocMed) async {
+    final String? token = await user.getIdToken();
+    if (token == null) {
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
     await showModalBottomSheet(
+      // ignore: use_build_context_synchronously
       context: context,
       isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      constraints: BoxConstraints(
+        // ignore: use_build_context_synchronously
+        maxHeight: MediaQuery.of(context).size.height,
+      ),
       builder: (_) => RegistrationDetails(
-        valueCallback: (List<String> data) async {
-          Navigator.of(context).pop();
-          print("DATA $data");
-          setState(() {
-            isLoading = true;
-          });
-          await Future.delayed(1500.ms);
-          setState(() {
-            isLoading = false;
-          });
-          // context.pushReplacement('/landing_page/0');
-          // ignore: use_build_context_synchronously
-          context.replaceNamed(
-            '/landing-page/0',
-          );
-          // print(data);
-        },
+        email: isSocMed ? user.email! : _email.text,
+        password: isSocMed ? "theableme" : _pwdText,
+        firebaseToken: token,
       ),
     );
+    isLoading = false;
+    if (mounted) setState(() {});
   }
 
   @override
@@ -312,7 +337,10 @@ class _RegisterPageState extends State<RegisterPage> with ColorPalette {
                       Row(
                         children: [
                           Checkbox.adaptive(
+                            activeColor: purplePalette,
                             value: !isObscured,
+                            // fillColor: MaterialStateProperty.resolveWith(
+                            //     (states) => Colors.red),
                             onChanged: (bool? f) {
                               setState(() {
                                 isObscured = !isObscured;
@@ -410,7 +438,14 @@ class _RegisterPageState extends State<RegisterPage> with ColorPalette {
                       ),
                       const Gap(30),
                       LoginWithSocMed(
-                        loadingCallback: (bool l) {},
+                        userCallback: (User user) async {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          await registerUser(user, true);
+                          isLoading = false;
+                          if (mounted) setState(() {});
+                        },
                       ),
                       const Gap(25),
                       RichText(

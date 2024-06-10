@@ -2,6 +2,9 @@ import 'package:able_me/app_config/palette.dart';
 import 'package:able_me/helpers/context_ext.dart';
 import 'package:able_me/models/profile/content_and_action.dart';
 import 'package:able_me/models/user_model.dart';
+import 'package:able_me/services/app_src/data_cacher.dart';
+import 'package:able_me/services/firebase/apple_auth.dart';
+import 'package:able_me/services/firebase/google_auth.dart';
 import 'package:able_me/view_models/auth/user_provider.dart';
 import 'package:able_me/view_models/theme_provider.dart';
 import 'package:able_me/views/landing_page/children/profile_page_components/notification_toggler.dart';
@@ -10,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
@@ -18,7 +22,9 @@ class ProfilePage extends ConsumerStatefulWidget {
   ConsumerState<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends ConsumerState<ProfilePage> with ColorPalette {
+class _ProfilePageState extends ConsumerState<ProfilePage>
+    with ColorPalette, GoogleAuth, AppleAuth {
+  final DataCacher _cacher = DataCacher.instance;
   @override
   Widget build(BuildContext context) {
     final UserModel? _udata = ref.watch(currentUser.notifier).state;
@@ -50,6 +56,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with ColorPalette {
           ),
           onPressed: () {},
           title: "History"),
+      ContentAndAction(
+        icon: SvgPicture.asset(
+          "assets/icons/address.svg",
+          color: textColor,
+          width: 20,
+        ),
+        onPressed: () {},
+        title: "Addresses",
+      ),
     ];
     final List<ContentAndAction> sec = [
       ContentAndAction(
@@ -221,6 +236,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with ColorPalette {
                             ref
                                 .read(darkModeProvider.notifier)
                                 .update((state) => f);
+                            ThemeMode _themeMode = ThemeMode.system;
+                            _themeMode = f ? ThemeMode.dark : ThemeMode.light;
+                            if (mounted) setState(() {});
                           },
                         )
                       ],
@@ -311,6 +329,39 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with ColorPalette {
                     ),
                   ],
                 ),
+              ),
+              const Gap(30),
+              ListTile(
+                onTap: () async {
+                  // await _cacher.re
+                  final int signInMethod = await _cacher.getSignInMethod() ?? 0;
+                  if (signInMethod == 0 || signInMethod == 3) {
+                    await firebaseSignOut();
+                  } else if (signInMethod == 1) {
+                    // google sign in
+                    await googleSignOut();
+                  } else {
+                    // fb sign Out
+                  }
+                  await _cacher.logout();
+                  // ignore: use_build_context_synchronously
+                  context.pushReplacement('/');
+                  return;
+                },
+                leading: SvgPicture.asset(
+                  "assets/icons/logout.svg",
+                  color: Colors.red,
+                  width: 20,
+                ),
+                title: const Text("Logout"),
+                titleTextStyle: context.fontTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.red,
+                ),
+                // trailing: Icon(
+                //   Icons.chevron_right,
+                //   color: textColor,
+                // ),
               ),
               const SafeArea(
                 top: false,

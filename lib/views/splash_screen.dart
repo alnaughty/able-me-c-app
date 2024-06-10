@@ -18,21 +18,21 @@ class SplashScreen extends ConsumerStatefulWidget {
 class _SplashScreenState extends ConsumerState<SplashScreen> with ColorPalette {
   final DataCacher _cacher = DataCacher.instance;
   Future<void> initCheck() async {
-    await _cacher.removeToken();
-    final String? _accessToken = _cacher.getUserToken();
-    ref.read(accessTokenProvider.notifier).update((state) => _accessToken);
+    // await _cacher.removeToken();
+    final String? accessToken = _cacher.getUserToken();
+    
+    ref.watch(accessTokenProvider.notifier).update((state) => accessToken);
     await Future.delayed(1000.ms);
-    if (_accessToken != null) {
+    if (accessToken != null) {
       // ignore: use_build_context_synchronously
       context.pushReplacement(
-        '/landing-page/0',
+        '/landing-page',
       );
       return;
     }
 
-    // context.replaceNamed('login-auth', extra: "splash-tag");
     // ignore: use_build_context_synchronously
-    context.replaceNamed('kyc');
+    context.replaceNamed('login-auth', extra: "splash-tag");
     print("GO TO LOGIN");
   }
 
@@ -96,7 +96,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with ColorPalette {
               ],
             )
                 .animate(
-                  delay: const Duration(milliseconds: 2000),
                   onPlay: (controller) => controller.repeat(reverse: true),
                 )
                 .fade(

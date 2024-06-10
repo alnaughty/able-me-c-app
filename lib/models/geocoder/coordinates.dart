@@ -11,6 +11,12 @@ class Coordinates {
   Coordinates.fromMap(Map map)
       : latitude = map["latitude"],
         longitude = map["longitude"];
+  factory Coordinates.fromJsonFirebase(Map<String, dynamic> json) {
+    return Coordinates(json['lat'], json['lng']);
+  }
+  // Coordinates.fromJsonFirebase(Map<String, dynamic> json)
+  // : latitude = 12.323525,
+  //   longitude = 24.12315;
 
   /// Creates a map from the coordinates properties.
   Map toMap() => {

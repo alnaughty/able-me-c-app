@@ -5,6 +5,12 @@ class DataCacher {
   static final DataCacher _instance = DataCacher._pr();
   static DataCacher get instance => _instance;
   late final SharedPreferences _prefs;
+
+  Future<void> logout() async {
+    await removeFcmToken();
+    await removeToken();
+  }
+
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
   }
@@ -13,6 +19,7 @@ class DataCacher {
   //0 = credentials
   //1 = google
   //2 = fb
+  //3 = apple
   //*/
   Future<void> signInMethod(int i) async => await _prefs.setInt(
         "sign-in-method",

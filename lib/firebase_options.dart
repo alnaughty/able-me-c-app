@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:339534952888:android:4552183e9f9f53c524774d',
     messagingSenderId: '339534952888',
     projectId: 'able-me-24704',
+    databaseURL: 'https://able-me-24704-default-rtdb.firebaseio.com',
     storageBucket: 'able-me-24704.appspot.com',
   );
 
@@ -62,8 +63,11 @@ class DefaultFirebaseOptions {
     appId: '1:339534952888:ios:950447ee454bb91224774d',
     messagingSenderId: '339534952888',
     projectId: 'able-me-24704',
+    databaseURL: 'https://able-me-24704-default-rtdb.firebaseio.com',
     storageBucket: 'able-me-24704.appspot.com',
+    androidClientId: '339534952888-5mijsecq65hgn0oh33qol955msd2mlr1.apps.googleusercontent.com',
     iosClientId: '339534952888-3oriesj03qv9n2qk3pt13hmoi0qpbpjt.apps.googleusercontent.com',
     iosBundleId: 'com.alnaughtech.ableMe',
   );
+
 }

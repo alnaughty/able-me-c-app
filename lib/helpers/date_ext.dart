@@ -19,3 +19,8 @@ extension TIMEAGO on DateTime {
     }
   }
 }
+
+extension DATECHECK on DateTime {
+  bool isSameDay(DateTime d) =>
+      (d.year == year && d.day == day && d.month == month);
+}

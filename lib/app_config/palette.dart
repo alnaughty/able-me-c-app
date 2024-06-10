@@ -52,4 +52,5 @@ mixin class ColorPalette {
   final Color blue = const Color(0xff3E74B1);
   final Color orange = const Color(0xffF8C624);
   final Color grey = const Color(0xffBDC3C7);
+  final Color red = const Color(0xFFC2222B);
 }

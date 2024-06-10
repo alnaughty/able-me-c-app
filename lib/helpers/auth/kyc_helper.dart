@@ -1,8 +1,9 @@
-import 'package:able_me/models/custom_scrollable_step.dart';
-import 'package:able_me/views/authentication/kyc_children/upload_id.dart';
-import 'package:flutter/material.dart';
+import 'package:able_me/services/auth/user_data.dart';
+import 'package:able_me/services/kyc/kyc_service.dart';
 
 mixin class KYCHelper {
+  final UserDataApi api = UserDataApi();
+  final KYCService kycApi = KYCService();
   // List<ScrollableStep> steps(Color textColor,
   //         {required ValueChanged<Map<int, dynamic>> dataCallback}) =>
   //     [
