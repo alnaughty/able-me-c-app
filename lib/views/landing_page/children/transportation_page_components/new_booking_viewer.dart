@@ -3,6 +3,7 @@ import 'package:able_me/helpers/context_ext.dart';
 import 'package:able_me/helpers/date_ext.dart';
 import 'package:able_me/models/rider_booking/booking_data.dart';
 import 'package:able_me/view_models/app/coordinate.dart';
+import 'package:able_me/view_models/booking_payload_vm.dart';
 import 'package:able_me/views/landing_page/children/home_page_components/ride_chosen/departure_and_misc.dart';
 import 'package:able_me/views/landing_page/children/home_page_components/ride_chosen/destination_picker.dart';
 import 'package:able_me/views/landing_page/children/home_page_components/ride_chosen/pickup_and_destination_map.dart';
@@ -17,10 +18,12 @@ class NewBookingViewer extends ConsumerStatefulWidget {
       {super.key,
       required this.onPayloadCreated,
       required this.destK,
+      required this.onBookPressed,
       required this.deptMiscK});
   final ValueChanged<BookingPayload> onPayloadCreated;
   final GlobalKey<DestinationPickerState> destK;
   final GlobalKey<DepartureAndMiscState> deptMiscK;
+  final Function() onBookPressed;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _NewBookingViewerState();
@@ -28,6 +31,7 @@ class NewBookingViewer extends ConsumerStatefulWidget {
 
 class _NewBookingViewerState extends ConsumerState<NewBookingViewer>
     with ColorPalette {
+  final BookingPayloadVM _vm = BookingPayloadVM.instance;
   // late final GlobalKey<DestinationPickerState> _kDest = widget.destK;
   // late final GlobalKey<DepartureAndMiscState> _kDeptMisc = widget.deptMiscK;
   late GeoPoint pickUpLocation = GeoPoint(
@@ -36,41 +40,58 @@ class _NewBookingViewerState extends ConsumerState<NewBookingViewer>
   );
   DateTime initDate = DateTime.now();
   // DateTime type = 0;
-  Widget customRadio(String title, DateTime value) {
+  Widget customRadio(
+    String title,
+    DateTime value,
+    int transpotype,
+  ) {
     final Color bgColor = context.theme.scaffoldBackgroundColor;
     final Color textColor = context.theme.secondaryHeaderColor;
     print(value);
-    return Row(
-      children: [
-        Container(
-          width: 20,
-          height: 20,
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.white.withOpacity(.5)),
-              borderRadius: BorderRadius.circular(5)),
-          child: MaterialButton(
-            color: initDate.isSameDay(value)
-                ? purplePalette
-                : textColor.withOpacity(.1),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-            onPressed: () {
-              widget.deptMiscK.currentState!.updateDate(value);
-              setState(() {
-                initDate = value;
-              });
-              print(value.month);
-            },
+    return InkWell(
+      onTap: () {
+        widget.deptMiscK.currentState!.updateDate(value);
+        _vm.updateTranspoType(transpotype);
+        setState(() {
+          initDate = value;
+        });
+        print(value.month);
+      },
+      child: Row(
+        children: [
+          Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+                color: initDate.isSameDay(value)
+                    ? purplePalette
+                    : textColor.withOpacity(.1),
+                border: Border.all(color: Colors.white.withOpacity(.5)),
+                borderRadius: BorderRadius.circular(5)),
+            // child: MaterialButton(
+            // color: initDate.isSameDay(value)
+            //     ? purplePalette
+            //     : textColor.withOpacity(.1),
+            //   shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(5)),
+            //   onPressed: () {
+            //     widget.deptMiscK.currentState!.updateDate(value);
+            //     setState(() {
+            //       initDate = value;
+            //     });
+            //     print(value.month);
+            //   },
+            // ),
           ),
-        ),
-        const Gap(5),
-        Text(
-          title,
-          style: TextStyle(
-            color: textColor,
-          ),
-        )
-      ],
+          const Gap(5),
+          Text(
+            title,
+            style: TextStyle(
+              color: textColor,
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -80,41 +101,19 @@ class _NewBookingViewerState extends ConsumerState<NewBookingViewer>
       children: [
         Row(
           children: [
-            customRadio(
-              "Short Notice",
-              DateTime.now(),
-            ),
+            customRadio("Short Notice", DateTime.now(), 2),
             const Gap(20),
-            customRadio(
-              "Pre-scheduled",
-              DateTime.now().add(1.days),
-            ),
+            customRadio("Pre-scheduled", DateTime.now().add(1.days), 3),
           ],
         ),
         const Gap(20),
         DestinationPicker(
           key: widget.destK,
           onDestinationCallback: (g) {
-            // setState(() {
-            //   dest = g;
-            //   map = PickupAndDestMap(
-            //     key: Key("${g.latitude},${g.longitude}"),
-            //     destination: dest,
-            //     pickUpLocation: pickUpLocation,
-            //     size: context.csize!.height * .56,
-            //   );
-            // });
+            widget.onPayloadCreated(_vm.value.copyWith(destination: g));
           },
           onPickupcallback: (g) {
-            // setState(() {
-            //   pickUpLocation = g;
-            //   map = PickupAndDestMap(
-            //     key: Key("${g.latitude},${g.longitude}"),
-            //     destination: dest,
-            //     pickUpLocation: pickUpLocation,
-            //     size: context.csize!.height * .56,
-            //   );
-            // });
+            widget.onPayloadCreated(_vm.value.copyWith(pickupLocation: g));
           },
         ),
         const Gap(20),

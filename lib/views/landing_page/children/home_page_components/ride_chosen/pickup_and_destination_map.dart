@@ -141,7 +141,7 @@ class _PickupAndDestMapState extends ConsumerState<PickupAndDestMap>
       child: GoogleMap(
         mapType: MapType.normal,
         scrollGesturesEnabled: false,
-        zoomGesturesEnabled: false,
+        zoomGesturesEnabled: true,
         zoomControlsEnabled: false,
         rotateGesturesEnabled: false,
         buildingsEnabled: false,

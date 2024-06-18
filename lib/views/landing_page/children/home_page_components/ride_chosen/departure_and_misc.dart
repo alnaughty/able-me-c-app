@@ -1,14 +1,14 @@
-import 'dart:ui';
-
 import 'package:able_me/app_config/palette.dart';
 import 'package:able_me/helpers/color_ext.dart';
 import 'package:able_me/helpers/context_ext.dart';
+import 'package:able_me/view_models/booking_payload_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
-class DepartureAndMisc extends StatefulWidget {
+class DepartureAndMisc extends ConsumerStatefulWidget {
   const DepartureAndMisc({
     super.key,
     required this.initDate,
@@ -31,10 +31,11 @@ class DepartureAndMisc extends StatefulWidget {
   final ValueChanged<TimeOfDay> onTimeCallback;
   final ValueChanged<DateTime> onDateCallback;
   @override
-  State<DepartureAndMisc> createState() => DepartureAndMiscState();
+  ConsumerState<DepartureAndMisc> createState() => DepartureAndMiscState();
 }
 
-class DepartureAndMiscState extends State<DepartureAndMisc> with ColorPalette {
+class DepartureAndMiscState extends ConsumerState<DepartureAndMisc>
+    with ColorPalette {
   late final TextEditingController _date;
   late final TextEditingController _time;
   late final TextEditingController _price;
@@ -42,12 +43,13 @@ class DepartureAndMiscState extends State<DepartureAndMisc> with ColorPalette {
   // late final TextEditingController _
   late DateTime _departureDate = widget.initDate;
   final int maxPassenger = 10;
-  final int maxLuggage = 5;
+  final int maxLuggage = 10;
   int numOfPassengers = 1;
   int numOfLuggage = 0;
   bool withPet = false;
   bool wheelChairFriendly = true;
   final GlobalKey<FormState> _kForm = GlobalKey<FormState>();
+  final BookingPayloadVM _vm = BookingPayloadVM.instance;
   TimeOfDay? _departureTime;
   @override
   void initState() {
@@ -69,6 +71,27 @@ class DepartureAndMiscState extends State<DepartureAndMisc> with ColorPalette {
     _time = TextEditingController();
     _price = TextEditingController();
     _note = TextEditingController();
+    _vm.stream.listen((event) {
+      numOfPassengers = event.passengers;
+      numOfLuggage = event.luggage;
+      _departureDate = event.departureDate;
+      _departureTime = event.departureTime;
+      _date.text = DateFormat('MMM dd, yyyy').format(_departureDate);
+      _time.text = event.departureTime.format(context);
+      _price.text = event.price.toStringAsFixed(2);
+      wheelChairFriendly = event.isWheelchairFriendly;
+      withPet = event.withPet;
+      _note.text = event.note ?? "";
+      if (mounted) setState(() {});
+      // _price
+    });
+    // ref.watch(bookDataProvider.notifier).addListener((state) {
+    //   if (state == null) return;
+    //   setState(() {
+    // numOfPassengers = state.payload.passengers;
+    // numOfLuggage = state.payload.luggage;
+    //   });
+    // });
     // widget.passengerCallback(numOfPassengers);
     // widget.luggageCallback(numOfLuggage);
   }
@@ -88,6 +111,7 @@ class DepartureAndMiscState extends State<DepartureAndMisc> with ColorPalette {
   Widget build(BuildContext context) {
     final Color bgColor = context.theme.scaffoldBackgroundColor;
     final Color textColor = context.theme.secondaryHeaderColor;
+    // final data = ref.read(bookingPayloadNotifier);
     return Form(
       key: _kForm,
       child: Column(
@@ -97,11 +121,12 @@ class DepartureAndMiscState extends State<DepartureAndMisc> with ColorPalette {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
+                flex: 4,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Departure",
+                      "Departure Date",
                       style: TextStyle(
                         color: textColor,
                         fontWeight: FontWeight.w600,
@@ -111,7 +136,6 @@ class DepartureAndMiscState extends State<DepartureAndMisc> with ColorPalette {
                     Row(
                       children: [
                         Expanded(
-                          flex: 2,
                           child: TextFormField(
                             controller: _date,
                             style: TextStyle(
@@ -164,53 +188,67 @@ class DepartureAndMiscState extends State<DepartureAndMisc> with ColorPalette {
                             ),
                           ),
                         ),
-                        const Gap(20),
-                        Expanded(
-                          child: TextFormField(
-                            controller: _time,
-                            style: TextStyle(
-                              color: textColor,
-                              fontSize: 13,
-                            ),
-                            validator: (text) {
-                              if (text == null) {
-                                return "Unexpected error";
-                              } else if (text.isEmpty) {
-                                return "Required";
-                              }
-                              return null;
-                            },
-                            readOnly: true,
-                            onTap: () async {
-                              await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                              ).then((value) {
-                                if (value == null) return;
-
-                                _departureTime = value;
-                                _time.text = value.format(context);
-                                if (mounted) setState(() {});
-                                _kForm.currentState!.validate();
-                                widget.onTimeCallback(value);
-                              });
-                            },
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: textColor.withOpacity(.1),
-                              prefixIcon: Icon(
-                                Icons.watch_later_outlined,
-                                color: textColor,
-                              ),
-                              hintText: "--:--",
-                              hintStyle: TextStyle(
-                                color: textColor.withOpacity(.3),
-                              ),
-                            ),
-                          ),
-                        ),
                       ],
                     )
+                  ],
+                ),
+              ),
+              const Gap(20),
+              Expanded(
+                flex: 3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Departure Time",
+                      style: TextStyle(
+                        color: textColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const Gap(10),
+                    TextFormField(
+                      controller: _time,
+                      style: TextStyle(
+                        color: textColor,
+                        fontSize: 13,
+                      ),
+                      validator: (text) {
+                        if (text == null) {
+                          return "Unexpected error";
+                        } else if (text.isEmpty) {
+                          return "Required";
+                        }
+                        return null;
+                      },
+                      readOnly: true,
+                      onTap: () async {
+                        await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        ).then((value) {
+                          if (value == null) return;
+
+                          _departureTime = value;
+                          _time.text = value.format(context);
+                          if (mounted) setState(() {});
+                          _kForm.currentState!.validate();
+                          widget.onTimeCallback(value);
+                        });
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: textColor.withOpacity(.1),
+                        prefixIcon: Icon(
+                          Icons.watch_later_outlined,
+                          color: textColor,
+                        ),
+                        hintText: "--:--",
+                        hintStyle: TextStyle(
+                          color: textColor.withOpacity(.3),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -276,10 +314,10 @@ class DepartureAndMiscState extends State<DepartureAndMisc> with ColorPalette {
                         ),
                         onChanged: (i) {
                           if (i == null) return;
-
-                          setState(() {
-                            numOfPassengers = i;
-                          });
+                          // ref.watch(bookDataProvider.notifier).update((state) =>
+                          //     state.copyWith(
+                          //         payload:
+                          //             state.payload.copyWith(passengers: i)));
                           _kForm.currentState!.validate();
                           widget.passengerCallback(i);
                         },
@@ -340,10 +378,12 @@ class DepartureAndMiscState extends State<DepartureAndMisc> with ColorPalette {
                         ),
                         onChanged: (i) {
                           if (i == null) return;
-
-                          setState(() {
-                            numOfLuggage = i;
-                          });
+                          // dataProvider.update((state) => state!.copyWith(
+                          //       payload: state.payload.copyWith(luggage: i),
+                          //     ));
+                          // setState(() {
+                          //   numOfLuggage = i;
+                          // });
                           _kForm.currentState!.validate();
                           widget.luggageCallback(i);
                         },

@@ -9,9 +9,6 @@ import 'package:able_me/views/landing_page/children/home_page_components/foods/b
 import 'package:able_me/views/landing_page/children/home_page_components/foods/menu/menu_details.dart';
 import 'package:able_me/views/landing_page/children/home_page_components/foods/restaurant_details_page.dart';
 import 'package:able_me/views/landing_page/children/home_page_components/medicine/browse_pharmacy_page.dart';
-import 'package:able_me/views/landing_page/children/home_page_components/ride_chosen/hourly_ride/hourly_ride.dart';
-import 'package:able_me/views/landing_page/children/home_page_components/ride_chosen/rider_details.dart';
-import 'package:able_me/views/landing_page/children/home_page_components/ride_chosen/scheduled/scheduled_ride.dart';
 import 'package:able_me/views/landing_page/children/navigation_page.dart';
 import 'package:able_me/views/landing_page/landing_page.dart';
 import 'package:able_me/views/splash_screen.dart';
@@ -166,22 +163,6 @@ class RouteConfig {
         },
       ),
       GoRoute(
-        path: '/rider-details-page/:id/:type',
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return buildPageWithDefaultTransition(
-            context: context,
-            state: state,
-            child: RiderDetails(
-              id: int.parse(state.pathParameters['id']!),
-              bookingType: int.parse(
-                state.pathParameters['type']!,
-              ),
-            ),
-            type: ZTransitionAnim.slideLR,
-          );
-        },
-      ),
-      GoRoute(
         path: '/menu-details/:id',
         pageBuilder: (BuildContext context, GoRouterState state) {
           return buildPageWithDefaultTransition(
@@ -225,28 +206,6 @@ class RouteConfig {
             context: context,
             state: state,
             child: const BrowsePharmacyPage(),
-            type: ZTransitionAnim.slideLR,
-          );
-        },
-      ),
-      GoRoute(
-        path: '/scheduled-ride-booking',
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return buildPageWithDefaultTransition(
-            context: context,
-            state: state,
-            child: const ScheduledRide(),
-            type: ZTransitionAnim.slideLR,
-          );
-        },
-      ),
-      GoRoute(
-        path: '/hourly-ride-booking',
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return buildPageWithDefaultTransition(
-            context: context,
-            state: state,
-            child: const HourlyRidePage(),
             type: ZTransitionAnim.slideLR,
           );
         },

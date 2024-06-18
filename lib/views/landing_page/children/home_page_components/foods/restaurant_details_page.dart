@@ -6,19 +6,15 @@ import 'package:able_me/models/store/category.dart';
 import 'package:able_me/models/store/store_details.dart';
 import 'package:able_me/models/store/store_menu.dart';
 import 'package:able_me/services/api/store/store_api.dart';
-import 'package:able_me/view_models/theme_provider.dart';
 import 'package:able_me/views/landing_page/children/home_page_components/foods/menu/menu_card.dart';
 import 'package:able_me/views/landing_page/children/store_map.dart';
 import 'package:able_me/views/widget_components/full_screen_loader.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 
 class RestaurantDetails extends ConsumerStatefulWidget {

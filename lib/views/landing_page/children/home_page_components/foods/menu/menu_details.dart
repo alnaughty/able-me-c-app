@@ -3,15 +3,14 @@ import 'dart:io';
 import 'package:able_me/app_config/palette.dart';
 import 'package:able_me/helpers/color_ext.dart';
 import 'package:able_me/helpers/context_ext.dart';
-import 'package:able_me/helpers/widget/book_rider_widget_helpers/passenger_controller.dart';
 import 'package:able_me/helpers/widget/count_controller.dart';
+import 'package:able_me/models/store/store_menu.dart';
 import 'package:able_me/models/store/store_menu_details.dart';
 import 'package:able_me/services/api/menu/menu_api.dart';
 import 'package:able_me/view_models/theme_provider.dart';
+import 'package:able_me/views/landing_page/children/home_page_components/foods/menu/menu_card.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -42,6 +41,7 @@ class _MenuDetailsPageState extends ConsumerState<MenuDetailsPage>
           return;
         }
         setState(() {
+          selectedPhoto = value.photoUrl;
           details = value;
         });
       });
@@ -50,6 +50,7 @@ class _MenuDetailsPageState extends ConsumerState<MenuDetailsPage>
     super.initState();
   }
 
+  String? selectedPhoto;
   @override
   Widget build(BuildContext context) {
     final Color bgColor = context.theme.scaffoldBackgroundColor;
@@ -85,7 +86,7 @@ class _MenuDetailsPageState extends ConsumerState<MenuDetailsPage>
                                     children: [
                                       Positioned.fill(
                                         child: CachedNetworkImage(
-                                          imageUrl: details!.photoUrl,
+                                          imageUrl: selectedPhoto!,
                                           fit: BoxFit.cover,
                                         ),
                                       ),
@@ -118,6 +119,41 @@ class _MenuDetailsPageState extends ConsumerState<MenuDetailsPage>
                                     ],
                                   ),
                                 ),
+                                if (details!.photos.isNotEmpty) ...{
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: 100,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: details!.photos.length,
+                                      itemBuilder: (_, i) {
+                                        final String url = details!.photos[i];
+                                        return GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedPhoto = url;
+                                            });
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: url == selectedPhoto
+                                                  ? Border.all(
+                                                      color: purplePalette,
+                                                      width: 3)
+                                                  : null,
+                                            ),
+                                            child: CachedNetworkImage(
+                                              imageUrl: url,
+                                              width: 100,
+                                              height: 100,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                },
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 20,
@@ -339,6 +375,51 @@ class _MenuDetailsPageState extends ConsumerState<MenuDetailsPage>
                                 Divider(
                                   color: textColor.withOpacity(.2),
                                 ),
+                                if (details!.suggestions.isNotEmpty) ...{
+                                  const Gap(20),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 0),
+                                        child: Text(
+                                          "Store Suggestion",
+                                          style: TextStyle(
+                                            color: textColor,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ),
+                                      const Gap(15),
+                                      Container(
+                                        width: double.infinity,
+                                        height: 200,
+                                        child: ListView.separated(
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (_, i) {
+                                              final StoreMenu m =
+                                                  details!.suggestions[i];
+                                              return Container(
+                                                width: 230,
+                                                height: 200,
+                                                color: Colors.blue,
+                                                child: MenuCard(menu: m),
+                                              );
+                                            },
+                                            separatorBuilder: (_, i) =>
+                                                const SizedBox(
+                                                  width: 15,
+                                                ),
+                                            itemCount:
+                                                details!.suggestions.length),
+                                      )
+                                    ],
+                                  ),
+                                },
+                                const Gap(10),
                               ],
                             ),
                           ),
@@ -388,7 +469,7 @@ class _MenuDetailsPageState extends ConsumerState<MenuDetailsPage>
                                     height: 50,
                                     child: const Center(
                                       child: Text(
-                                        "Order now",
+                                        "Add to cart",
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 15,

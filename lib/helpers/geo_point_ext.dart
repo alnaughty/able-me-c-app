@@ -49,3 +49,7 @@ extension EXT on GeoPoint {
     return earthRadius * c; // Distance in kilometers
   }
 }
+
+extension Convert on Position {
+  GeoPoint toGeoPoint() => GeoPoint(latitude, longitude);
+}

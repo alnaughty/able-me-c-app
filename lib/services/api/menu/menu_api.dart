@@ -19,7 +19,7 @@ class MenuApi extends Network {
         if (response.statusCode == 200) {
           var res = json.decode(response.body);
 
-          return StoreMenuDetails.fromJson(res['result']);
+          return StoreMenuDetails.fromJson(res['result'], res['suggestions']);
         }
         print("ERROR DETAILS SERVER FETCH");
         return null;

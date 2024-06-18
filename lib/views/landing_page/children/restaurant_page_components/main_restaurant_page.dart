@@ -213,7 +213,7 @@ class _MainRestaurantPageState extends ConsumerState<MainRestaurantPage>
           const RestaurantCategory(),
           const Gap(20),
           const StoreListingDisplay(
-            type: StoreType.pharmacy,
+            type: StoreType.restaurant,
           ),
           const SafeArea(
               child: SizedBox(
