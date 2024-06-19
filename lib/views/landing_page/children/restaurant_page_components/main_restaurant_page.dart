@@ -8,6 +8,7 @@ import 'package:able_me/models/user_model.dart';
 import 'package:able_me/services/geocoder_services/geocoder.dart';
 import 'package:able_me/view_models/app/coordinate.dart';
 import 'package:able_me/view_models/auth/user_provider.dart';
+import 'package:able_me/view_models/notifiers/current_address_notifier.dart';
 import 'package:able_me/view_models/theme_provider.dart';
 import 'package:able_me/views/landing_page/children/restaurant_page_components/components/listing.dart';
 import 'package:able_me/views/landing_page/children/restaurant_page_components/restaurant_category.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 
 class MainRestaurantPage extends ConsumerStatefulWidget {
   const MainRestaurantPage({super.key});
@@ -30,6 +32,7 @@ class _MainRestaurantPageState extends ConsumerState<MainRestaurantPage>
   @override
   void initState() {
     // TODO: implement initState
+    setState(() {});
     super.initState();
   }
 
@@ -40,6 +43,8 @@ class _MainRestaurantPageState extends ConsumerState<MainRestaurantPage>
     final Color bgColor = context.theme.scaffoldBackgroundColor;
     final Color textColor = context.theme.secondaryHeaderColor;
     final bool isDarkMode = ref.watch(darkModeProvider);
+    final CurrentAddress? address = ref.watch(currentAddressNotifier);
+    print(address == null);
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,91 +52,113 @@ class _MainRestaurantPageState extends ConsumerState<MainRestaurantPage>
           PreferredSize(
             preferredSize: const Size.fromHeight(65),
             child: AppBar(
-                backgroundColor: Colors.transparent,
-                centerTitle: true,
-                // leading: _udata != null
-                //     ? Container(
-                //         width: 70,
-                //       )
-                //     : null,
-                leadingWidth: 80,
-                leading: _udata != null
-                    ? Center(
+              backgroundColor: Colors.transparent,
+              centerTitle: true,
+              leadingWidth: 80,
+              leading: _udata != null
+                  ? Center(
+                      child: GestureDetector(
+                        onTap: () => context.push('/profile-page'),
                         child: CustomImageBuilder(
                           avatar: _udata.avatar,
                           placeHolderName: _udata.name[0].toUpperCase(),
                         ),
-                      )
-                    : null,
-                // if (_udata != null) ...{
-                // CustomImageBuilder(
-                //   avatar: _udata.avatar,
-                //   placeHolderName: _udata.name[0].toUpperCase(),
-                // ),
-                //   const Gap(10)
-                // },
-                actions: [
-                  IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.shopping_basket_outlined,
-                        color: textColor,
-                      )),
-                  if (_udata != null) ...{
-                    Container(
-                      width: 20,
+                      ),
                     )
-                  },
-                ],
-                title: pos == null
-                    ? Text(
-                        "Checking Location",
-                        style: TextStyle(
+                  : null,
+              // if (_udata != null) ...{
+              // CustomImageBuilder(
+              //   avatar: _udata.avatar,
+              //   placeHolderName: _udata.name[0].toUpperCase(),
+              // ),
+              //   const Gap(10)
+              // },
+              actions: [
+                IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.shopping_basket_outlined,
+                      color: textColor,
+                    )),
+                if (address != null) ...{
+                  Container(
+                    width: 20,
+                  )
+                },
+              ],
+              title: address == null
+                  ? Container()
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/icons/location.svg",
+                          color: textColor,
+                          width: 20,
+                        ),
+                        const Gap(5),
+                        Text(
+                          "${address.locality}, ${address.city}, ${address.countryCode}",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
                             fontFamily: "Montserrat",
                             color: textColor,
                             fontSize: 13,
-                            fontWeight: FontWeight.w700),
-                      )
-                    : FutureBuilder(
-                        future: Geocoder.google().findAddressesFromCoordinates(
-                          Coordinates(pos.latitude, pos.longitude),
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                        builder: (_, f) {
-                          final List<GeoAddress> currentAddress = f.data ?? [];
+                      ],
+                    ),
+              // title: pos == null
+              //     ? Text(
+              //         "Checking Location",
+              //         style: TextStyle(
+              //             fontFamily: "Montserrat",
+              //             color: textColor,
+              //             fontSize: 13,
+              //             fontWeight: FontWeight.w700),
+              //       )
+              //     : FutureBuilder(
+              //         future: Geocoder.google().findAddressesFromCoordinates(
+              //           Coordinates(pos.latitude, pos.longitude),
+              //         ),
+              //         builder: (_, f) {
+              //           final List<GeoAddress> currentAddress = f.data ?? [];
 
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/icons/location.svg",
-                                color: textColor,
-                                width: 20,
-                              ),
-                              const Gap(5),
-                              if (currentAddress.isEmpty) ...{
-                                Text(
-                                  "Unknown Location",
-                                  style: TextStyle(
-                                      fontFamily: "Montserrat",
-                                      color: textColor,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w700),
-                                )
-                              } else ...{
-                                Text(
-                                  "${currentAddress.first.locality}, ${currentAddress.first.countryCode}",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontFamily: "Montserrat",
-                                    color: textColor,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              },
-                            ],
-                          );
-                        })),
+              //           return Row(
+              //             mainAxisAlignment: MainAxisAlignment.center,
+              //             children: [
+              //               SvgPicture.asset(
+              //                 "assets/icons/location.svg",
+              //                 color: textColor,
+              //                 width: 20,
+              //               ),
+              //               const Gap(5),
+              //               if (currentAddress.isEmpty) ...{
+              //                 Text(
+              //                   "Unknown Location",
+              //                   style: TextStyle(
+              //                       fontFamily: "Montserrat",
+              //                       color: textColor,
+              //                       fontSize: 13,
+              //                       fontWeight: FontWeight.w700),
+              //                 )
+              //               } else ...{
+              //                 Text(
+              //                   "${currentAddress.first.locality}, ${currentAddress.first.countryCode}",
+              //                   overflow: TextOverflow.ellipsis,
+              //                   style: TextStyle(
+              //                     fontFamily: "Montserrat",
+              //                     color: textColor,
+              //                     fontSize: 13,
+              //                     fontWeight: FontWeight.w700,
+              //                   ),
+              //                 ),
+              //               },
+              //             ],
+              //           );
+              //         }),
+            ),
           ),
           const Gap(10),
           Padding(

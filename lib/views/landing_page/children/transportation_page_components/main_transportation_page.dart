@@ -10,6 +10,7 @@ import 'package:able_me/models/user_model.dart';
 import 'package:able_me/services/geocoder_services/geocoder.dart';
 import 'package:able_me/view_models/app/coordinate.dart';
 import 'package:able_me/view_models/auth/user_provider.dart';
+import 'package:able_me/view_models/notifiers/current_address_notifier.dart';
 import 'package:able_me/views/landing_page/children/home_page_components/driver_and_user_map.dart';
 import 'package:able_me/views/landing_page/children/home_page_components/ride_chosen/departure_and_misc.dart';
 import 'package:able_me/views/landing_page/children/home_page_components/ride_chosen/destination_picker.dart';
@@ -73,9 +74,8 @@ class MainTransportationPageState extends ConsumerState<MainTransportationPage>
     final Color bgColor = context.theme.scaffoldBackgroundColor;
     final Color textColor = context.theme.secondaryHeaderColor;
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    final Position? pos = ref.watch(coordinateProvider);
-    final UserModel? _udata = ref.watch(currentUser.notifier).state;
     final Size size = MediaQuery.of(context).size;
+    final CurrentAddress? address = ref.watch(currentAddressNotifier);
     return CustomScrollView(
       slivers: [
         // map ??
@@ -105,6 +105,33 @@ class MainTransportationPageState extends ConsumerState<MainTransportationPage>
                   Positioned.fill(
                     child: map,
                   ),
+                  if (address != null) ...{
+                    Positioned(
+                      child: SafeArea(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/icons/location.svg",
+                              color: textColor,
+                              width: 20,
+                            ),
+                            const Gap(5),
+                            Text(
+                              "${address.locality}, ${address.city}, ${address.countryCode}",
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: "Montserrat",
+                                color: textColor,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  },
                   Positioned(
                     bottom: 0,
                     left: 0,

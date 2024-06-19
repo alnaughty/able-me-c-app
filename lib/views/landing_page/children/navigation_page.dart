@@ -5,15 +5,19 @@ import 'package:able_me/helpers/color_ext.dart';
 import 'package:able_me/helpers/context_ext.dart';
 import 'package:able_me/helpers/geo_point_ext.dart';
 import 'package:able_me/models/geocoder/coordinates.dart';
+import 'package:able_me/models/geocoder/geoaddress.dart';
 import 'package:able_me/models/user_model.dart';
 import 'package:able_me/services/app_src/speech_recognition_v2.dart';
 import 'package:able_me/services/firebase/user_location_service.dart';
+import 'package:able_me/services/geocoder_services/geocoder.dart';
 import 'package:able_me/services/geolocation_service.dart';
 import 'package:able_me/view_models/app/coordinate.dart';
 import 'package:able_me/view_models/auth/user_provider.dart';
 import 'package:able_me/view_models/booking_payload_vm.dart';
+import 'package:able_me/view_models/notifiers/current_address_notifier.dart';
 import 'package:able_me/view_models/notifiers/user_location_state_notifier.dart';
 import 'package:able_me/view_models/theme_provider.dart';
+import 'package:able_me/views/landing_page/children/blogs_page_components/main_blogs_page.dart';
 import 'package:able_me/views/landing_page/children/history_page.dart';
 import 'package:able_me/views/landing_page/children/profile_page.dart';
 import 'package:able_me/views/landing_page/children/restaurant_page_components/main_restaurant_page.dart';
@@ -57,10 +61,10 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
     ),
     const MainRestaurantPage(),
     const HistoryPage(),
-    const ProfilePage(),
     Container(
       color: Colors.red,
     ),
+    const MainBlogPage()
   ];
 
   Future<void> receivedValue(Position p) async {
@@ -106,21 +110,39 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
     final LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.always ||
         permission == LocationPermission.whileInUse) {
-      Geolocator.getPositionStream().listen((event) async {
-        if (udata != null) {
-          print('fetch');
-          _service
-              .driverLocationCollectionStream(udata!, event)
-              .listen((event) {
-            ref.watch(userLocationProvider.notifier).update(event);
-          });
-
-          hasListened = true;
-          if (mounted) setState(() {});
+      await Geolocator.getCurrentPosition().then((v) async {
+        await receivedValue(v);
+        if (mounted) setState(() {});
+        _vm.updatePickupLocation(v.toGeoPoint());
+        final List<GeoAddress> address =
+            await Geocoder.google().findAddressesFromGeoPoint(v.toGeoPoint());
+        if (address.isNotEmpty) {
+          ref
+              .read(currentAddressNotifier.notifier)
+              .update((state) => CurrentAddress(
+                    addressLine: address.first.addressLine ?? "",
+                    city: address.first.adminAreaCode ?? "",
+                    coordinates: v.toGeoPoint(),
+                    locality: address.first.locality ?? "",
+                    countryCode: address.first.countryCode ?? "",
+                  ));
         }
-        _vm.updatePickupLocation(event.toGeoPoint());
-        await receivedValue(event);
       });
+      // Geolocator.getPositionStream().listen((event) async {
+      //   if (udata != null) {
+      //     print('fetch');
+      //     _service
+      //         .driverLocationCollectionStream(udata!, event)
+      //         .listen((event) {
+      //       ref.watch(userLocationProvider.notifier).update(event);
+      //     });
+
+      //     hasListened = true;
+      //     if (mounted) setState(() {});
+      //   }
+      //   _vm.updatePickupLocation(event.toGeoPoint());
+      //   await receivedValue(event);
+      // });
     } else {
       print("FF");
       final LocationPermission perm = await Geolocator.requestPermission();
@@ -147,7 +169,6 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
   final UserLocationFirebaseService _service = UserLocationFirebaseService();
   @override
   void initState() {
-    initialize(0);
     _myAssistant = SpeechAssistant(
       onCommandListened: (c) async {
         if (c.key == 'book') {
@@ -206,7 +227,8 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
         }
         _vm.updateID(value.id);
       });
-      await initAssistant();
+      await initialize(0);
+      // await initAssistant();
     });
     super.initState();
   }

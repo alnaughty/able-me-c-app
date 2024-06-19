@@ -10,8 +10,9 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 class MenuCard extends ConsumerStatefulWidget {
-  const MenuCard({super.key, required this.menu});
+  const MenuCard({super.key, required this.menu, this.showTitle = true});
   final StoreMenu menu;
+  final bool showTitle;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MenuCardState();
 }
@@ -38,7 +39,7 @@ class _MenuCardState extends ConsumerState<MenuCard> with ColorPalette {
                   children: [
                     SizedBox(
                       width: c.maxWidth,
-                      height: c.maxWidth * .9,
+                      height: !widget.showTitle ? c.maxHeight : c.maxWidth * .9,
                       child: Stack(
                         children: [
                           Positioned.fill(
@@ -84,27 +85,29 @@ class _MenuCardState extends ConsumerState<MenuCard> with ColorPalette {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: 5,
-                        ),
-                        child: Center(
-                          child: Text(
-                            widget.menu.name.toUpperCase(),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: textColor,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              height: 1,
+                    if (widget.showTitle) ...{
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 5,
+                          ),
+                          child: Center(
+                            child: Text(
+                              widget.menu.name.toUpperCase(),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: textColor,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                height: 1,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    )
+                      )
+                    },
                   ],
                 ),
               ),

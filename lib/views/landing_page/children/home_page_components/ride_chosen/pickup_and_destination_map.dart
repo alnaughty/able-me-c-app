@@ -150,9 +150,9 @@ class _PickupAndDestMapState extends ConsumerState<PickupAndDestMap>
         layoutDirection: TextDirection.rtl,
         mapToolbarEnabled: false,
         fortyFiveDegreeImageryEnabled: false,
-        trafficEnabled: true,
+        trafficEnabled: false,
         myLocationEnabled: false,
-        liteModeEnabled: true,
+        liteModeEnabled: Platform.isAndroid,
         initialCameraPosition: CameraPosition(
           target: widget.pickUpLocation != null
               ? LatLng(

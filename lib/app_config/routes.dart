@@ -10,6 +10,8 @@ import 'package:able_me/views/landing_page/children/home_page_components/foods/m
 import 'package:able_me/views/landing_page/children/home_page_components/foods/restaurant_details_page.dart';
 import 'package:able_me/views/landing_page/children/home_page_components/medicine/browse_pharmacy_page.dart';
 import 'package:able_me/views/landing_page/children/navigation_page.dart';
+import 'package:able_me/views/landing_page/children/profile_page.dart';
+import 'package:able_me/views/landing_page/children/profile_page_components/address_page.dart';
 import 'package:able_me/views/landing_page/landing_page.dart';
 import 'package:able_me/views/splash_screen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -162,6 +164,31 @@ class RouteConfig {
           );
         },
       ),
+      GoRoute(
+          path: '/profile-page',
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            print(state.fullPath);
+            return buildPageWithDefaultTransition(
+              context: context,
+              state: state,
+              child: const ProfilePage(),
+              type: ZTransitionAnim.slideLR,
+            );
+          },
+          routes: [
+            GoRoute(
+              path: 'address',
+              pageBuilder: (BuildContext context, GoRouterState state) {
+                print(state.fullPath);
+                return buildPageWithDefaultTransition(
+                  context: context,
+                  state: state,
+                  child: const AddressPage(),
+                  type: ZTransitionAnim.slideLR,
+                );
+              },
+            )
+          ]),
       GoRoute(
         path: '/menu-details/:id',
         pageBuilder: (BuildContext context, GoRouterState state) {

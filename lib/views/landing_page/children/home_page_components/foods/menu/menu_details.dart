@@ -385,7 +385,7 @@ class _MenuDetailsPageState extends ConsumerState<MenuDetailsPage>
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 20, vertical: 0),
                                         child: Text(
-                                          "Store Suggestion",
+                                          "Suggested Items",
                                           style: TextStyle(
                                             color: textColor,
                                             fontWeight: FontWeight.w700,
@@ -395,26 +395,40 @@ class _MenuDetailsPageState extends ConsumerState<MenuDetailsPage>
                                       ),
                                       const Gap(15),
                                       Container(
+                                        color: purplePalette,
                                         width: double.infinity,
-                                        height: 200,
-                                        child: ListView.separated(
-                                            scrollDirection: Axis.horizontal,
-                                            itemBuilder: (_, i) {
-                                              final StoreMenu m =
-                                                  details!.suggestions[i];
-                                              return Container(
-                                                width: 230,
-                                                height: 200,
-                                                color: Colors.blue,
-                                                child: MenuCard(menu: m),
-                                              );
-                                            },
-                                            separatorBuilder: (_, i) =>
-                                                const SizedBox(
-                                                  width: 15,
-                                                ),
-                                            itemCount:
-                                                details!.suggestions.length),
+                                        height: 150,
+                                        child: Center(
+                                          child: ListView.separated(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 15),
+                                              scrollDirection: Axis.horizontal,
+                                              itemBuilder: (_, i) {
+                                                final StoreMenu m =
+                                                    details!.suggestions[i];
+                                                return ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(6),
+                                                  child: Container(
+                                                    width: 150,
+                                                    height: 150,
+                                                    color: Colors.blue,
+                                                    child: MenuCard(
+                                                      menu: m,
+                                                      showTitle: false,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              separatorBuilder: (_, i) =>
+                                                  const SizedBox(
+                                                    width: 15,
+                                                  ),
+                                              itemCount:
+                                                  details!.suggestions.length),
+                                        ),
                                       )
                                     ],
                                   ),

@@ -62,7 +62,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage>
           color: textColor,
           width: 20,
         ),
-        onPressed: () {},
+        onPressed: () {
+          context.push('/profile-page/address');
+        },
         title: "Addresses",
       ),
     ];
@@ -118,91 +120,120 @@ class _ProfilePageState extends ConsumerState<ProfilePage>
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 child: SafeArea(
                   bottom: false,
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: SizedBox(
-                      height: 65,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              // border: Border.all(
-                              //   color: Colors.white,
-                              //   width: 3,
-                              // ),
-                              // image: DecorationImage(image: _udata?.avatar == null ? AssetImage("assets/images/logo.png") : NetworkImage(_udata!.avatar))
-                            ),
-                            child: Center(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: _udata == null
-                                    ? Container(
-                                        width: 55,
-                                        height: 55,
-                                        color: Colors.grey.shade100,
-                                        child: Image.asset(
-                                          "assets/images/logo.png",
-                                        ),
-                                      )
-                                    : Container(
-                                        width: 55,
-                                        height: 55,
-                                        color: _udata.avatar == null
-                                            ? context
-                                                .theme.colorScheme.background
-                                            : Colors.white,
-                                        child: _udata.avatar == null
-                                            ? Center(
-                                                child: Text(
-                                                  _udata.name[0].toUpperCase(),
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: context
-                                                            .fontTheme
-                                                            .bodyLarge!
-                                                            .fontSize! +
-                                                        5,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              )
-                                            : CachedNetworkImage(
-                                                imageUrl: _udata.avatar!,
-                                                height: 55,
-                                                width: 55,
-                                              ),
-                                      ),
-                              ),
-                            ),
+                  child: Stack(
+                    children: [
+                      if (context.canPop()) ...{
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: BackButton(
+                            style: ButtonStyle(
+                                minimumSize: WidgetStateProperty.resolveWith(
+                                    (states) => const Size(60, 60)),
+                                backgroundColor:
+                                    WidgetStateProperty.resolveWith((states) =>
+                                        purplePalette.withOpacity(.8)),
+                                shape: WidgetStateProperty.resolveWith(
+                                    (states) => RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(6)))),
+                            color: Colors.white,
+                            onPressed: () {
+                              if (context.canPop()) {
+                                context.pop();
+                              }
+                            },
                           ),
-                          const Gap(10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
+                        ),
+                      },
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: SizedBox(
+                          height: 65,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                _udata?.fullname ?? "",
-                                style: const TextStyle(
-                                  fontSize: 16,
+                              Container(
+                                width: 60,
+                                height: 60,
+                                decoration: const BoxDecoration(
                                   color: Colors.white,
-                                  fontWeight: FontWeight.w600,
+                                  shape: BoxShape.circle,
+                                  // border: Border.all(
+                                  //   color: Colors.white,
+                                  //   width: 3,
+                                  // ),
+                                  // image: DecorationImage(image: _udata?.avatar == null ? AssetImage("assets/images/logo.png") : NetworkImage(_udata!.avatar))
+                                ),
+                                child: Center(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: _udata == null
+                                        ? Container(
+                                            width: 55,
+                                            height: 55,
+                                            color: Colors.grey.shade100,
+                                            child: Image.asset(
+                                              "assets/images/logo.png",
+                                            ),
+                                          )
+                                        : Container(
+                                            width: 55,
+                                            height: 55,
+                                            color: _udata.avatar == null
+                                                ? context.theme.colorScheme
+                                                    .background
+                                                : Colors.white,
+                                            child: _udata.avatar == null
+                                                ? Center(
+                                                    child: Text(
+                                                      _udata.name[0]
+                                                          .toUpperCase(),
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: context
+                                                                .fontTheme
+                                                                .bodyLarge!
+                                                                .fontSize! +
+                                                            5,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  )
+                                                : CachedNetworkImage(
+                                                    imageUrl: _udata.avatar!,
+                                                    height: 55,
+                                                    width: 55,
+                                                  ),
+                                          ),
+                                  ),
                                 ),
                               ),
-                              Text(
-                                _udata?.email ?? "",
-                                style: const TextStyle(
-                                    fontSize: 13, color: Colors.white),
-                              ),
+                              const Gap(10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    _udata?.fullname ?? "",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  Text(
+                                    _udata?.email ?? "",
+                                    style: const TextStyle(
+                                        fontSize: 13, color: Colors.white),
+                                  ),
+                                ],
+                              )
                             ],
-                          )
-                        ],
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ),

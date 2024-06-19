@@ -19,7 +19,7 @@ class _ImageAsMarkerState extends State<ImageAsMarker> with ColorPalette {
   @override
   Widget build(BuildContext context) {
     print("IMAGE: ${widget.networkImage}");
-    return Container(
+    return SizedBox(
       height: 65,
       width: 65,
       child: Stack(
