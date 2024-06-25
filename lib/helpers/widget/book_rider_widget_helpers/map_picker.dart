@@ -137,11 +137,11 @@ class _AbleMeMapPickerState extends ConsumerState<AbleMeMapPicker>
             child: SafeArea(
                 child: BackButton(
               style: ButtonStyle(
-                fixedSize: MaterialStateProperty.resolveWith(
+                fixedSize: WidgetStateProperty.resolveWith(
                     (states) => const Size(65, 65)),
-                backgroundColor: MaterialStateProperty.resolveWith(
+                backgroundColor: WidgetStateProperty.resolveWith(
                     (states) => purplePalette.withOpacity(.8)),
-                shape: MaterialStateProperty.resolveWith(
+                shape: WidgetStateProperty.resolveWith(
                   (states) => RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6),
                   ),

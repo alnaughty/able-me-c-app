@@ -5,6 +5,7 @@ import 'package:able_me/views/authentication/login.dart';
 import 'package:able_me/views/authentication/recovery_code.dart';
 import 'package:able_me/views/authentication/register.dart';
 import 'package:able_me/views/landing_page/children/ableme_map.dart';
+import 'package:able_me/views/landing_page/children/blogs_page_components/blog_details.dart';
 import 'package:able_me/views/landing_page/children/home_page_components/foods/browse_restaurant_page.dart';
 import 'package:able_me/views/landing_page/children/home_page_components/foods/menu/menu_details.dart';
 import 'package:able_me/views/landing_page/children/home_page_components/foods/restaurant_details_page.dart';
@@ -137,6 +138,17 @@ class RouteConfig {
             },
           ),
         ],
+      ),
+      GoRoute(
+        path: '/blog/:id',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithDefaultTransition(
+            context: context,
+            state: state,
+            child: BlogDetailsPage(id: int.parse(state.pathParameters['id']!)),
+            type: ZTransitionAnim.slideLR,
+          );
+        },
       ),
       GoRoute(
         path: '/landing-page',

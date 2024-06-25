@@ -71,6 +71,11 @@
 	<key>GIDClientID</key>
 	<string>339534952888-3oriesj03qv9n2qk3pt13hmoi0qpbpjt.apps.googleusercontent.com</string>
 	<!-- Google Sign-in Section -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>sms</string>
+		<string>tel</string>
+	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

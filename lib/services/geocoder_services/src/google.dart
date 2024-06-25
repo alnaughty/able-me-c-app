@@ -7,7 +7,6 @@ import 'package:able_me/models/geocoder/geoaddress.dart';
 import 'package:able_me/services/app_src/env_service.dart';
 import 'package:able_me/services/geocoder_services/src/base.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Geocoding and reverse geocoding through requests to Google APIs.
 class GoogleGeocoding implements Geocoding {
@@ -32,6 +31,7 @@ class GoogleGeocoding implements Geocoding {
       c.Coordinates coordinates) async {
     final url =
         '$_host?key=$apiKey${language != null ? '&language=${language!}' : ''}&latlng=${coordinates.latitude},${coordinates.longitude}';
+    print(url);
     return await _send(url) ?? const <GeoAddress>[];
   }
 
@@ -41,6 +41,7 @@ class GoogleGeocoding implements Geocoding {
     final url =
         '$_host?key=$apiKey${language != null ? '&language=${language!}' : ''}&latlng=${coordinates.latitude},${coordinates.longitude}';
     // return await _send(url) ?? const <GeoAddress>[];
+    print(url);
     return await _send(url) ?? const <GeoAddress>[];
   }
 
