@@ -42,7 +42,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage>
       ),
       ContentAndAction(
           icon: SvgPicture.asset(
-            "assets/icons/profile.svg",
+            "assets/icons/wallet.svg",
             color: textColor,
             width: 20,
           ),

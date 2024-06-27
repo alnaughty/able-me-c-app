@@ -15,9 +15,9 @@ class TransportationApi with Network {
     required BookingPayload payload,
   }) async {
     try {
-      // print("BOOK F!");
+      //
       // assert(accessToken == null, "Token is null");
-      // print("BOOK!");
+      //
       return await http
           .post(
         "${endpoint}booking/transportation/new".toUri,
@@ -41,7 +41,7 @@ class TransportationApi with Network {
       });
     } catch (e, s) {
       Fluttertoast.showToast(msg: "Booking failed to upload");
-      print("ERROR BOOKING : $e $s");
+
       return false;
     }
   }

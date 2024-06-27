@@ -10,12 +10,19 @@ extension VALIDATOR on String {
 
 extension CapitalizeFirstLetter on String {
   String capitalizeWords() {
-    List<String> words = split(" ");
-    for (int i = 0; i < words.length; i++) {
-      String word = words[i];
-      words[i] = "${word[0].toUpperCase()}${word.substring(1)}";
+    try {
+      List<String> words = split(" ");
+      if (words.isEmpty) {
+        return "";
+      }
+      for (int i = 0; i < words.length; i++) {
+        String word = words[i];
+        words[i] = "${word[0].toUpperCase()}${word.substring(1)}";
+      }
+      return words.join(" ");
+    } catch (e) {
+      return this;
     }
-    return words.join(" ");
   }
 }
 
@@ -73,7 +80,7 @@ extension Extractor on String {
 
       // Combine dollars and cents to get the price string
       decimalNumber = '$dollars.$cents';
-      print("The text contains numbers that represent: $decimalNumber.");
+
       return double.tryParse(decimalNumber);
       // Extract the matched groups
       // String? dollars = match.group(1);

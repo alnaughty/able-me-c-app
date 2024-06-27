@@ -1,9 +1,12 @@
+import 'package:able_me/helpers/color_ext.dart';
 import 'package:able_me/helpers/context_ext.dart';
 import 'package:able_me/helpers/date_ext.dart';
 import 'package:able_me/helpers/string_ext.dart';
 import 'package:able_me/models/blogs/blog_model.dart';
 import 'package:able_me/view_models/notifiers/blogs_notifier.dart';
+import 'package:able_me/view_models/theme_provider.dart';
 import 'package:able_me/views/widget_components/full_screen_loader.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -22,11 +25,15 @@ class _BlogsListingState extends ConsumerState<BlogsListing> {
     final Color bgColor = context.theme.scaffoldBackgroundColor;
     final Color textColor = context.theme.secondaryHeaderColor;
     final data = ref.watch(blogListingProvider);
+    final bool isDarkMode = ref.watch(darkModeProvider);
     return data.when(
         data: (data) {
           if (data.isEmpty) {
             return Center(
-              child: Text("NO DATA"),
+              child: Text(
+                "NO DATA",
+                style: TextStyle(color: textColor),
+              ),
             );
           }
           return ListView.separated(
@@ -41,11 +48,33 @@ class _BlogsListingState extends ConsumerState<BlogsListing> {
                   },
                   child: SizedBox(
                     width: context.csize!.width,
-                    child: Row(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          flex: 4,
+                        if (blog.featuredPhoto != null) ...{
+                          ClipRRect(
+                            borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(20)),
+                            child: CachedNetworkImage(
+                              imageUrl: blog.featuredPhoto!,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          // const Gap(20),
+                        },
+                        Container(
+                          padding: blog.featuredPhoto == null
+                              ? null
+                              : const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                              color: blog.featuredPhoto == null
+                                  ? null
+                                  : !isDarkMode
+                                      ? bgColor.darken().withOpacity(.5)
+                                      : bgColor.lighten(),
+                              borderRadius: const BorderRadius.vertical(
+                                  bottom: Radius.circular(20))),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -126,14 +155,6 @@ class _BlogsListingState extends ConsumerState<BlogsListing> {
                             ],
                           ),
                         ),
-                        const Gap(20),
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(6)),
-                        )
                       ],
                     ),
                   ),

@@ -52,8 +52,7 @@ class FirebaseEmailPasswordAuth {
       {required String email, required String password}) async {
     try {
       assert(email.isNotEmpty && password.isNotEmpty, "INVALID INPUT DATA");
-      print("EMAIL : $email");
-      print("PASSWORD : $password");
+
       final AuthCredential credential = EmailAuthProvider.credential(
         email: email,
         password: password,
@@ -85,7 +84,6 @@ class FirebaseEmailPasswordAuth {
       Fluttertoast.showToast(msg: "Connection timeout");
       return null;
     } catch (e) {
-      print("PLATFORM ERROR : $e");
       return null;
     }
   }

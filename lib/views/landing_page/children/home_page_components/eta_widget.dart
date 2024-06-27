@@ -37,7 +37,6 @@ class _ETAWidgetState extends ConsumerState<ETAWidget> {
   }
 
   Future<void> calculateETA() async {
-    print("calc");
     final Position? userLoc = ref.watch(coordinateProvider.notifier).state;
     if (userLoc == null) return;
     final response = await http.get(Uri.parse(

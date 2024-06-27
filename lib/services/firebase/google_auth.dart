@@ -27,7 +27,7 @@ mixin class GoogleAuth {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser != null) {
         // final bool isAuthorized = await _googleSignIn.canAccessScopes(scopes);
-        // print("IS AUTHORIZED : $isAuthorized");
+        //
         // if (!isAuthorized) return null;
         await _handleGetContact(googleUser);
         final GoogleSignInAuthentication googleAuth =
@@ -59,8 +59,6 @@ mixin class GoogleAuth {
       Fluttertoast.showToast(msg: "No Internet Connection");
       return null;
     } on HttpException catch (e, s) {
-      print("ERROR : $e");
-      print("TRACE : $s");
       Fluttertoast.showToast(
           msg: "An error has occurred while processing your request.");
       return null;
@@ -94,7 +92,7 @@ mixin class GoogleAuth {
     final Map<String, dynamic> data =
         json.decode(response.body) as Map<String, dynamic>;
     final String? namedContact = _pickFirstNamedContact(data);
-    print("NAMED CONTACT : $namedContact");
+
     // setState(() {
     //   if (namedContact != null) {
     //     _contactText = 'I see you know $namedContact!';

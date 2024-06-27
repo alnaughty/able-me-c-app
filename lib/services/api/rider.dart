@@ -14,14 +14,13 @@ class RiderApi with Network {
       }).then((response) {
         if (response.statusCode == 200) {
           var data = json.decode(response.body);
-          // print("KYC DATA $data");
-          print("KYC DATA ${response.statusCode}: ${response.body}");
+          //
+
           return BookRiderDetails.fromJson(data);
         }
         return null;
       });
     } catch (e) {
-      print("ERROR FETCHING RIDER DETAILS : $e");
       return null;
     }
   }

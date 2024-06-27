@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:able_me/app_config/palette.dart';
 import 'package:able_me/helpers/context_ext.dart';
-import 'package:able_me/helpers/geo_point_ext.dart';
 import 'package:able_me/helpers/widget/custom_marker.dart';
 import 'package:able_me/helpers/widget/image_as_marker.dart';
 import 'package:able_me/models/geocoder/geoaddress.dart';
@@ -14,7 +13,6 @@ import 'package:able_me/view_models/app/coordinate.dart';
 import 'package:able_me/view_models/auth/user_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';

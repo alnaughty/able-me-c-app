@@ -6,7 +6,7 @@ mixin class Launcher {
     return await canLaunchUrl(Uri.parse(url));
   }
 
-  Future<void> launch(String url) async {
+  Future<void> launchMyUrl(String url) async {
     if (await isLaunchable(url)) {
       await launchUrl(
         Uri.parse(url),

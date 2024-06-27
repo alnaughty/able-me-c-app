@@ -15,12 +15,14 @@ class BlogDetails extends BlogModel {
     required super.publishedOn,
     required this.author,
     required this.body,
+    required super.featuredPhoto,
     required this.images,
   });
   factory BlogDetails.fromJson(Map<String, dynamic> json) {
     final List imgs = json['photos'];
     return BlogDetails(
       id: json['id'],
+      featuredPhoto: json['image_url'],
       likes: json['likes_count'] ?? 0,
       views: json['views_count'] ?? 0,
       title: json['title'],

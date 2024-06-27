@@ -21,11 +21,10 @@ class MenuApi extends Network {
 
           return StoreMenuDetails.fromJson(res['result'], res['suggestions']);
         }
-        print("ERROR DETAILS SERVER FETCH");
+
         return null;
       });
     } catch (e) {
-      print("MENU DETAILS ERROR: $e");
       return null;
     }
   }

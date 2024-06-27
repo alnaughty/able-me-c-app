@@ -33,8 +33,11 @@ class AddressApi extends Network {
       }).then((response) {
         if (response.statusCode == 200) {
           var data = json.decode(response.body);
+          print(data);
           return data['result']['id'];
         }
+
+        return null;
       });
     } catch (e) {
       return null;
@@ -57,7 +60,7 @@ class AddressApi extends Network {
 
   Future<List<UserAddress>> get() async {
     try {
-      assert(_accessToken == null, "NO ACCESSTOKEN FOUND!");
+      assert(_accessToken != null, "NO ACCESSTOKEN FOUND!");
       return await http.get("${endpoint}address/search".toUri, headers: {
         "Accept": "application/json",
         HttpHeaders.authorizationHeader: "Bearer $_accessToken"
@@ -65,14 +68,13 @@ class AddressApi extends Network {
         if (response.statusCode == 200) {
           var data = json.decode(response.body);
           final List res = data['data'];
-          // print("KYC DATA $data");
-          print("KYC DATA ${response.statusCode}: ${response.body}");
+          //
+
           return res.map((e) => UserAddress.fromJson(e)).toList();
         }
         return [];
       });
     } catch (e) {
-      print("ERROR FETCHING USER ADDRESSES: $e");
       return [];
     }
   }

@@ -7,7 +7,6 @@ import 'package:able_me/models/firebase_user_location_model.dart';
 import 'package:able_me/view_models/app/coordinate.dart';
 import 'package:able_me/view_models/notifiers/user_location_state_notifier.dart';
 import 'package:able_me/views/landing_page/children/home_page_components/eta_widget.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';

@@ -416,7 +416,7 @@ class DepartureAndMiscState extends ConsumerState<DepartureAndMisc>
                 onFieldSubmitted: (t) {
                   final double? ff = double.tryParse(
                       t.replaceAll(',', ".").replaceAll('-', "."));
-                  print("Budget :$ff");
+
                   if (ff != null) {
                     widget.budgetCallback(ff);
                     _kForm.currentState!.validate();

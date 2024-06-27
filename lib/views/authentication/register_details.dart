@@ -107,7 +107,7 @@ class _RegistrationDetailsState extends ConsumerState<RegistrationDetails>
       _lname.text,
       _address.text,
     ];
-    print("asdasds $values");
+
     registerData(values, widget.firebaseToken);
     // widget.valueCallback(values);
     return;
@@ -245,11 +245,9 @@ class _RegistrationDetailsState extends ConsumerState<RegistrationDetails>
                                 ]),
 
                                 onEditingComplete: () async {
-                                  print("Complete");
                                   final bool isValidated =
                                       _kForm.currentState!.validate();
                                   if (isValidated) {
-                                    print("VALID");
                                     // await register();
                                     // await login();
                                     finish();
@@ -265,7 +263,7 @@ class _RegistrationDetailsState extends ConsumerState<RegistrationDetails>
                                   // final bool isValidated = _kForm.currentState!.validate();
                                   // if (isValidated) {
                                   //   // await login();
-                                  //   print("GOODS");
+                                  //
                                   //   // await register();
                                   // }
                                 },
@@ -311,7 +309,6 @@ class _RegistrationDetailsState extends ConsumerState<RegistrationDetails>
                                   final bool isValidated =
                                       _kForm.currentState!.validate();
                                   if (isValidated) {
-                                    print("VALID");
                                     // await register();
                                     // await login();
                                     finish();
@@ -369,7 +366,6 @@ class _RegistrationDetailsState extends ConsumerState<RegistrationDetails>
                                   final bool isValidated =
                                       _kForm.currentState!.validate();
                                   if (isValidated) {
-                                    print("VALID");
                                     // await login();
                                     // await register();
 
@@ -386,6 +382,7 @@ class _RegistrationDetailsState extends ConsumerState<RegistrationDetails>
                                 },
                                 keyboardType: TextInputType.streetAddress,
                                 decoration: InputDecoration(
+                                  isDense: false,
                                   hintText: "Address",
                                   // hintText: "⁕⁕⁕⁕⁕",
                                   label: const Text("Address"),
@@ -454,7 +451,6 @@ class _RegistrationDetailsState extends ConsumerState<RegistrationDetails>
                             final bool isValidated =
                                 _kForm.currentState!.validate();
                             if (isValidated) {
-                              print("VALIDs");
                               // await register();
                               finish();
                             }

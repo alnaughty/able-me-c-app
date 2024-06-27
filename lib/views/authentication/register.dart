@@ -43,7 +43,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> with ColorPalette {
     setState(() {
       isLoading = true;
     });
-    print("EMAIL ${_email.text}, PASSWORD: $_pwdText");
+
     await _auth
         .create(email: _email.text, password: _pwdText)
         .then((value) async {
@@ -184,7 +184,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> with ColorPalette {
                                 ]),
 
                                 onEditingComplete: () async {
-                                  print("Complete");
                                   final bool isValidEmail =
                                       _kEmailForm.currentState!.validate();
 
@@ -201,7 +200,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> with ColorPalette {
                                       _kForm.currentState!.validate();
                                   if (isValidated) {
                                     // await login();
-                                    print("GOODS");
+
                                     await register();
                                   }
                                 },
@@ -251,7 +250,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> with ColorPalette {
                                     final bool isValidated =
                                         _kForm.currentState!.validate();
                                     if (isValidated) {
-                                      print("VALID");
                                       await register();
                                       // await login();
                                     } else {
@@ -267,6 +265,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> with ColorPalette {
                                   keyboardType: TextInputType.visiblePassword,
                                   obscureText: isObscured,
                                   decoration: InputDecoration(
+                                    isDense: false,
                                     hintStyle: TextStyle(
                                         color: textColor.withOpacity(.5)),
                                     labelStyle: TextStyle(
@@ -301,7 +300,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> with ColorPalette {
                                     final bool isValidated =
                                         _kForm.currentState!.validate();
                                     if (isValidated) {
-                                      print("VALID");
                                       // await login();
                                       await register();
                                     } else {
@@ -317,6 +315,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> with ColorPalette {
                                   keyboardType: TextInputType.visiblePassword,
                                   obscureText: isObscured,
                                   decoration: InputDecoration(
+                                    isDense: false,
                                     hintStyle: TextStyle(
                                         color: textColor.withOpacity(.5)),
                                     labelStyle: TextStyle(
@@ -392,7 +391,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> with ColorPalette {
                           final bool isValidated =
                               _kForm.currentState!.validate();
                           if (isValidated && isEmailValid) {
-                            print("VALID");
                             await register();
                           }
                         },

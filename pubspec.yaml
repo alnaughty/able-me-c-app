@@ -63,8 +63,6 @@ dependencies:
   image_cropper: ^5.0.1
   image_picker: ^1.0.7
   flutter_image_compress: ^2.1.0
-  flutter_html:
-    git: https://github.com/alnaughty/flutter_modified_html.git
   # face_camera: ^0.0.9
   camera: ^0.10.5+9
   cloud_firestore: ^4.15.9
@@ -83,6 +81,7 @@ dependencies:
   form_builder_validators: ^10.0.1
   widget_to_marker: ^1.0.5
   url_launcher: ^6.3.0
+  flutter_widget_from_html: ^0.15.1
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true

@@ -4,13 +4,14 @@ import 'package:able_me/helpers/date_ext.dart';
 import 'package:able_me/helpers/string_ext.dart';
 import 'package:able_me/models/blogs/blog_details.dart';
 import 'package:able_me/services/api/blogs/blog_api.dart';
+import 'package:able_me/utils/url_launcher.dart';
 import 'package:able_me/views/widget_components/carousel_widget.dart';
 import 'package:able_me/views/widget_components/full_screen_loader.dart';
-import 'package:able_me/views/widget_components/html_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:html/parser.dart';
 
 class BlogDetailsPage extends ConsumerStatefulWidget {
   const BlogDetailsPage({super.key, required this.id});
@@ -20,7 +21,7 @@ class BlogDetailsPage extends ConsumerStatefulWidget {
 }
 
 class _BlogDetailsState extends ConsumerState<BlogDetailsPage>
-    with ColorPalette {
+    with ColorPalette, Launcher {
   static final BlogApi _api = BlogApi();
   // final  _apiProvider = Provider<BlogApi>((ref) => BlogApi());
   BlogDetails? _details;
@@ -45,6 +46,8 @@ class _BlogDetailsState extends ConsumerState<BlogDetailsPage>
 
   @override
   Widget build(BuildContext context) {
+    final Color bgColor = context.theme.scaffoldBackgroundColor;
+    final Color textColor = context.theme.secondaryHeaderColor;
     final Size size = context.csize!;
     return Scaffold(
       body: _details == null
@@ -58,18 +61,24 @@ class _BlogDetailsState extends ConsumerState<BlogDetailsPage>
               physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
-                  SizedBox(
+                  Container(
+                    color: _details!.images.isEmpty
+                        ? purplePalette
+                        : Colors.transparent,
                     width: size.width,
-                    height: size.height * .55,
+                    height: _details!.images.isEmpty ? 135 : size.height * .55,
                     child: Stack(
                       children: [
-                        Positioned.fill(
-                          child: CarouselWidget(
-                            images: _details!.images,
-                            height: size.height * .55,
+                        if (_details!.images.isNotEmpty) ...{
+                          Positioned.fill(
+                            child: CarouselWidget(
+                              images: _details!.images,
+                              height: size.height * .55,
+                            ),
                           ),
-                        ),
-                        if (context.canPop()) ...{
+                        },
+                        if (context.canPop() &&
+                            _details!.images.isNotEmpty) ...{
                           Positioned(
                               left: 20,
                               child: SafeArea(
@@ -102,8 +111,14 @@ class _BlogDetailsState extends ConsumerState<BlogDetailsPage>
                           child: Container(
                             color: purplePalette,
                             child: ListTile(
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
+                              leading: _details!.images.isEmpty
+                                  ? const BackButton(
+                                      color: Colors.white,
+                                    )
+                                  : null,
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: _details!.images.isEmpty ? 0 : 20,
+                                  vertical: 10),
                               subtitle: Text(
                                   "Posted ${_details!.publishedOn.formatTimeAgo}"),
                               subtitleTextStyle: const TextStyle(
@@ -128,8 +143,50 @@ class _BlogDetailsState extends ConsumerState<BlogDetailsPage>
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 10),
-                    child: CustomHtmlViewer(
-                      html: _details!.body,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _details?.title ?? "Untitle",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: textColor,
+                          ),
+                        ),
+                        const Gap(10),
+                        HtmlWidget(
+                          _details!.body,
+                          onTapUrl: (url) async {
+                            await launchMyUrl(url);
+                            return isLaunchable(url);
+                          },
+                          textStyle: TextStyle(
+                            fontSize: 14,
+                            color: textColor,
+                          ),
+                          renderMode: RenderMode.column,
+                        ),
+                        const Gap(30),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${_details!.comments == 0 ? "No" : ""} Comments",
+                              style: TextStyle(
+                                  color: textColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                            if (_details!.comments > 0) ...{
+                              InkWell(
+                                onTap: () {},
+                                child: Text("See all ${_details!.comments}"),
+                              )
+                            }
+                          ],
+                        )
+                      ],
                     ),
                   ),
                   const SafeArea(

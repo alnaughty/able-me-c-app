@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 
 class CarouselWidget extends StatefulWidget {
-  const CarouselWidget({super.key, this.height = 200, required this.images});
+  const CarouselWidget(
+      {super.key,
+      this.height = 200,
+      required this.images,
+      this.fromAsset = false});
   final double height;
   final List<String> images;
+  final bool fromAsset;
   static final CarouselController _controller = CarouselController();
 
   @override
@@ -29,13 +34,19 @@ class _CarouselWidgetState extends State<CarouselWidget> {
                 width: size.width,
                 height: widget.height,
                 margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                child: CachedNetworkImage(
-                  imageUrl: _images[i],
-                  height: widget.height,
-                  width: size.width,
-                  fit: BoxFit.cover,
-                  // alignment: Alignment.topCenter,
-                ),
+                child: widget.fromAsset
+                    ? Image.asset(
+                        _images[i],
+                        height: widget.height,
+                        width: size.width,
+                        fit: BoxFit.cover,
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: _images[i],
+                        height: widget.height,
+                        width: size.width,
+                        fit: BoxFit.cover,
+                      ),
               ),
             )
             // Align(

@@ -21,7 +21,6 @@ class CustomScrollableStepperState extends State<CustomScrollableStepper>
     (index) => false,
   );
   validate(int index) {
-    print("VALIDATE");
     setState(() {
       _indexValidated[index] = true;
       _currentStep += 1;

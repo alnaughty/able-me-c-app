@@ -25,7 +25,6 @@ class BlogApi extends Network {
         return null;
       });
     } catch (h) {
-      print("ERROR FETCHING BLOG DETAILS");
       return null;
     }
   }
@@ -44,7 +43,6 @@ class BlogApi extends Network {
         return [];
       });
     } catch (e) {
-      print("ERROR FETHCING BLOGS:  $e");
       return [];
     }
   }

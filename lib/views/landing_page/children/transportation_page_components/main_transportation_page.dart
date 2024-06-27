@@ -59,8 +59,8 @@ class MainTransportationPageState extends ConsumerState<MainTransportationPage>
   }
 
   late GeoPoint pickUpLocation = GeoPoint(
-    ref.watch(coordinateProvider)!.latitude,
-    ref.watch(coordinateProvider)!.longitude,
+    ref.watch(currentAddressNotifier)!.coordinates.latitude,
+    ref.watch(currentAddressNotifier)!.coordinates.longitude,
   );
   late PickupAndDestMap map = PickupAndDestMap(
     key: Key("$pickUpLocation"),
@@ -107,22 +107,27 @@ class MainTransportationPageState extends ConsumerState<MainTransportationPage>
                   ),
                   if (address != null) ...{
                     Positioned(
+                      left: 0,
+                      right: 0,
+                      top: 10,
                       child: SafeArea(
+                        bottom: false,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SvgPicture.asset(
                               "assets/icons/location.svg",
-                              color: textColor,
+                              color: purplePalette,
                               width: 20,
                             ),
                             const Gap(5),
                             Text(
-                              "${address.locality}, ${address.city}, ${address.countryCode}",
+                              "${address.locality}, ${address.city}, ${address.countryCode}"
+                                  .capitalizeWords(),
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontFamily: "Montserrat",
-                                color: textColor,
+                                color: purplePalette,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -132,6 +137,23 @@ class MainTransportationPageState extends ConsumerState<MainTransportationPage>
                       ),
                     ),
                   },
+                  Positioned(
+                      right: 10,
+                      top: 0,
+                      child: SafeArea(
+                        bottom: false,
+                        child: IconButton(
+                          onPressed: () {},
+                          tooltip: "History",
+                          style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.resolveWith(
+                                (_) => purplePalette,
+                              ),
+                              foregroundColor: WidgetStateProperty.resolveWith(
+                                  (_) => Colors.white)),
+                          icon: const Icon(Icons.history),
+                        ),
+                      )),
                   Positioned(
                     bottom: 0,
                     left: 0,
@@ -181,7 +203,6 @@ class MainTransportationPageState extends ConsumerState<MainTransportationPage>
                 NewBookingViewer(
                     onBookPressed: widget.onBookPressed,
                     onPayloadCreated: (payload) {
-                      print("PAYLOAD! : ${payload.destination}");
                       if (payload.destination != null) {
                         map = PickupAndDestMap(
                           key: Key("${DateTime.now().microsecondsSinceEpoch}"),

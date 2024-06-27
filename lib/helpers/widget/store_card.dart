@@ -65,6 +65,7 @@ class StoreCard extends StatelessWidget with ColorPalette {
                       children: [
                         Text(
                           data.name.capitalizeWords(),
+                          maxLines: 1,
                           style: TextStyle(
                               color: textColor,
                               fontSize: 16,

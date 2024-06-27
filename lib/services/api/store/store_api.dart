@@ -33,14 +33,12 @@ class StoreAPI with Network {
         return null;
       });
     } catch (e) {
-      print("DETAILS ERROR : $e");
       return null;
     }
   }
 
   Future<List<StoreModel>> getStore({StoreParams? params}) async {
     try {
-      print("Keyword : ${params?.keyword}");
       return await http.get(
           // "${endpoint}store/search?sort_by=id/desc&type=&keyword=mang&page=1"
           "${endpoint}store/search?sort_by=id/desc&type=${params?.type ?? ""}&keyword=${params?.keyword ?? ""}"
@@ -52,15 +50,13 @@ class StoreAPI with Network {
         if (response.statusCode == 200) {
           final d = json.decode(response.body);
           final List result = d['data'];
-          print("Stores : ${result.length}");
 
           return result.map((e) => StoreModel.fromJson(e)).toList();
         }
-        print("${response.statusCode}: ${response.reasonPhrase}");
+
         return [];
       });
     } catch (e, s) {
-      print("Error : $e $s");
       return [];
     }
   }

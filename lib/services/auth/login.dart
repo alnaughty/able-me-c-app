@@ -54,7 +54,7 @@ class UserAuth extends Network {
         print(response.body);
         if (response.statusCode == 200) {
           final Map<String, dynamic> data = json.decode(response.body);
-          print("REGISTER DATA : $data");
+
           return data['access_token'];
         } else if (response.statusCode == 404) {
           print(response.body);
@@ -64,7 +64,6 @@ class UserAuth extends Network {
         return null;
       });
     } catch (e) {
-      print("ERROR : $e");
       Fluttertoast.showToast(
           msg: "An unexpected error occurred while trying to authenticate");
       return null;

@@ -22,7 +22,6 @@ class _RecoveryCodePageState extends State<RecoveryCodePage> with ColorPalette {
 
   void submit() {
     if (code.isEmpty) return;
-    print("SUBMIT  : $code");
   }
 
   static const PIN_LENGTH = 5;
@@ -135,10 +134,9 @@ class _RecoveryCodePageState extends State<RecoveryCodePage> with ColorPalette {
                           length: PIN_LENGTH,
                           fieldWidth: 60,
                           // onChanged: (String f) {
-                          //   print("CODE : $f");
+                          //
                           // },
                           onCompleted: (String c) {
-                            print("FINAL CODE : $c");
                             setState(() {
                               code = c;
                             });
@@ -147,7 +145,6 @@ class _RecoveryCodePageState extends State<RecoveryCodePage> with ColorPalette {
                           },
                           onChanged: (String f) {
                             if (f.length < PIN_LENGTH) {
-                              print("EMPTY CODE! $f");
                               setState(() {
                                 code = "";
                               });

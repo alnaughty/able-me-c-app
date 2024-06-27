@@ -35,7 +35,6 @@ mixin class AppleAuth {
     try {
       final AuthorizationCredentialAppleID? result = await credential;
       if (result != null) {
-        print("RESULT STATE : ${result.state}");
         final oAuthProvider = OAuthProvider("apple.com");
 
         final credential = oAuthProvider.credential(

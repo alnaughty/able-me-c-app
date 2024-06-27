@@ -25,14 +25,12 @@ mixin class AuthHelper {
     final User? user =
         await emailPasswordAuth.signIn(email: email, password: password);
     if (user == null) {
-      print("wARA USER");
-
       Fluttertoast.showToast(msg: "User not found");
       return null;
     }
 
     final String? aToken = await user.getIdToken();
-    print("FTOKEN : $aToken");
+
     if (aToken == null) {
       return null;
     }

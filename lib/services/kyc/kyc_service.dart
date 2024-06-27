@@ -14,20 +14,18 @@ class KYCService extends Network {
         "Accept": "application/json",
         HttpHeaders.authorizationHeader: "Bearer $accessToken",
       }).then((response) {
-        print("TOKEN: $accessToken");
         if (response.statusCode == 200) {
           var data = json.decode(response.body);
-          // print("KYC DATA $data");
-          print("KYC DATA ${response.statusCode}: ${response.body}");
+          //
+
           return KYCStatus.fromJson(data);
           // final List result = data['negotiations'] as List;
           // return result.map((e) => NegotiationModel.fromJson(e)).toList();
         }
-        print("KYC DATA ERROR ${response.statusCode}: ${response.body}");
+
         return null;
       });
     } catch (e, s) {
-      print("ERROR : $e $s");
       return null;
     }
   }
@@ -47,11 +45,10 @@ class KYCService extends Network {
           Fluttertoast.showToast(msg: "Email Validated");
           return true;
         }
-        print("RESPONSE ${response.statusCode}");
+
         return false;
       });
     } catch (e, s) {
-      print("ERRORS : $e, $s");
       return false;
     }
   }
@@ -70,11 +67,10 @@ class KYCService extends Network {
           Fluttertoast.showToast(msg: "Email verification sent");
           return true;
         }
-        print("RESPONSE ${response.statusCode}");
+
         return false;
       });
     } catch (e, s) {
-      print("ERRORS : $e, $s");
       return false;
     }
   }
@@ -102,7 +98,7 @@ class KYCService extends Network {
       ).then((response) {
         if (response.statusCode == 200) {
           var data = json.decode(response.body);
-          print("KYC UPLOAD DATA $data");
+
           Fluttertoast.showToast(
               msg: "Our team will review your data, Thank you!");
           // return 1;
@@ -111,11 +107,10 @@ class KYCService extends Network {
         } else if (response.statusCode == 413) {
           Fluttertoast.showToast(msg: "Your file is too large");
         }
-        print("KYC DATA ERROR ${response.statusCode}: ${response.body}");
+
         return null;
       });
     } catch (e, s) {
-      print("ERROR : $e $s");
       return;
     }
   }

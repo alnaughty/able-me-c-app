@@ -15,8 +15,6 @@ class UserDataApi extends Network {
         "Accepts": "application/json",
         HttpHeaders.authorizationHeader: "Bearer $accessToken"
       }).then((response) {
-        print("ACCESSTOKEN : $accessToken");
-        print("USER DETAILS : ${response.statusCode}");
         if (response.statusCode == 200) {
           final Map<String, dynamic> data = json.decode(response.body);
           return UserModel.fromJson(data);
@@ -24,7 +22,6 @@ class UserDataApi extends Network {
         return null;
       });
     } catch (e) {
-      print("USER ERR: $e");
       return null;
     }
   }
@@ -35,10 +32,9 @@ class UserDataApi extends Network {
         "Accepts": "application/json",
         HttpHeaders.authorizationHeader: "Bearer $accessToken"
       }).then((response) {
-        print("TOKEN: $accessToken");
         if (response.statusCode == 200) {
           final data = json.decode(response.body);
-          print("KYC DATA FETCHED : $data");
+
           if (data is List) {
             return null;
           }
@@ -66,15 +62,13 @@ class UserDataApi extends Network {
         return response.statusCode == 200;
         // if (response.statusCode == 200) {
         //   final data = json.decode(response.body);
-        //   print("KYC UPLOAD DATA : $data");
+        //
         //   return data;
         // }
-        // print("DATA ${response.statusCode} ${response.body}");
+        //
         // return [];
       });
     } catch (e, s) {
-      print("ERROR : $e");
-      print("Stacktrace: $s");
       return false;
     }
   }
@@ -91,15 +85,13 @@ class UserDataApi extends Network {
       }).then((response) {
         if (response.statusCode == 200) {
           final data = json.decode(response.body);
-          print("KYC UPLOAD DATA : $data");
+
           return data;
         }
-        print("DATA ${response.statusCode} ${response.body}");
+
         return [];
       });
     } catch (e, s) {
-      print("ERROR : $e");
-      print("Stacktrace: $s");
       return;
     }
   }

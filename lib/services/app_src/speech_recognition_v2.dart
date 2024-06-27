@@ -30,14 +30,12 @@ class SpeechAssistant with AssistantHelper {
 
   Future<void> listen() async {
     if (speech.isListening) {
-      print("IT IS ALREADY LISTENING");
       return;
     }
 
-    print("LISTENING");
     bool _available = await speech.initialize(
       onError: (err) {
-        // print("ERROR: $err");
+        //
       },
       onStatus: (status) async {
         if ((status == "done" || status == "notListening") && !isSpeaking) {

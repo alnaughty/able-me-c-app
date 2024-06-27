@@ -49,12 +49,11 @@ class _SelfieKYCPageState extends State<SelfieKYCPage> with ColorPalette {
     final List<CameraDescription> cameras = await availableCameras();
 
     await Future.delayed(const Duration(milliseconds: 400));
-    print("CAMS LENGTH : ${cameras.length}");
+
     final CameraDescription camera = cameras
         .where((element) => element.lensDirection == CameraLensDirection.front)
         .first;
 
-    print("${camera.lensDirection}");
     setState(() {
       controller = CameraController(camera, ResolutionPreset.max);
     });
@@ -142,7 +141,7 @@ class _SelfieKYCPageState extends State<SelfieKYCPage> with ColorPalette {
     //         onFaceDetected: (Face? face) {
     //           //Do something
     //           if (face == null) return;
-    //           print("FACE DETECTED : ${face.smilingProbability}");
+    //
     //         },
     //         messageBuilder: (context, face) {
     //           if (face == null) {

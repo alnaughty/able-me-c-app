@@ -157,7 +157,6 @@ class _KYCPageState extends ConsumerState<KYCPage>
                     Expanded(
                       child: GoToVerifyEmailPage(
                         callback: (email) async {
-                          print("asdasda");
                           await sendVerificationCode(email);
                           // _cacher.setUserToken(token);
                         },
@@ -352,9 +351,7 @@ class _KYCPageState extends ConsumerState<KYCPage>
         isLoading = true;
       });
 
-      await api.validateKYCSelfie(accessToken, selfie!).then((value) {
-        print("SELFIE UPLOADED : $value");
-      });
+      await api.validateKYCSelfie(accessToken, selfie!).then((value) {});
       await api.validateKYCIDs(accessToken, idcard!);
       isLoading = false;
       if (mounted) setState(() {});
@@ -395,7 +392,7 @@ class _KYCPageState extends ConsumerState<KYCPage>
           ),
           // content: SelfieKYCPage(
           //   imageCallback: (String value) {
-          //     print("b64 img : $value");
+          //
           //   },
           // ),
           content: UploadIdPage(
@@ -468,7 +465,6 @@ class _KYCPageState extends ConsumerState<KYCPage>
           content: Consumer(
             builder: ((context, ref, child) => GoToVerifyEmailPage(
                   callback: (email) async {
-                    print("asdasda");
                     await sendVerificationCode(email);
                     // _cacher.setUserToken(token);
                   },

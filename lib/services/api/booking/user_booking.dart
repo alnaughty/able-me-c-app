@@ -23,7 +23,7 @@ class UserBookingApi with Network {
           var data = jsonDecode(response.body);
 
           final List res = data['result']['data'];
-          print("RESULT : $res");
+
           return res
               .where((element) => element['transportation'] != null)
               .map((e) => UserTransportationBooking.fromJson(e))
@@ -32,7 +32,6 @@ class UserBookingApi with Network {
         return [];
       });
     } catch (e, s) {
-      print("ERROR : $e $s");
       return [];
     }
   }

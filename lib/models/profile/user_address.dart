@@ -25,7 +25,14 @@ class UserAddress extends CurrentAddress {
       locality: json['state'],
       countryCode: json['country'],
       id: json['id'],
-      title: json['title'],
+      title: json['title'] ?? "UNSET",
     );
   }
+
+  CurrentAddress toAddress() => CurrentAddress(
+      addressLine: addressLine,
+      city: city,
+      coordinates: coordinates,
+      locality: locality,
+      countryCode: countryCode);
 }

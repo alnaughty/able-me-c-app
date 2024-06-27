@@ -42,7 +42,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
       _email.text,
       _password.text,
     );
-    print("USER : ${_user?.email}");
+
     if (_user != null) {
       await loginUser(_user, false);
       // accessTokenProvider. = _accessToken;
@@ -59,8 +59,6 @@ class _LoginPageState extends ConsumerState<LoginPage>
       if (mounted) setState(() {});
       return;
     }
-    print("firebase id : $tok");
-    print("FIREBASE UID : ${_user.uid}");
 
     final String? accessToken = await getAccessToken(tok);
     if (accessToken == null) {
@@ -206,7 +204,6 @@ class _LoginPageState extends ConsumerState<LoginPage>
                             ]),
                             style: TextStyle(color: textColor),
                             onEditingComplete: () async {
-                              print("Complete");
                               // if (_email.text.isValidEmail) {
 
                               // }
@@ -261,7 +258,6 @@ class _LoginPageState extends ConsumerState<LoginPage>
                               }
 
                               if (isValidated) {
-                                print("VALID");
                                 await login();
                               }
                             },
@@ -327,7 +323,6 @@ class _LoginPageState extends ConsumerState<LoginPage>
                         final bool isValidated =
                             _kForm.currentState!.validate();
                         if (isValidated) {
-                          print("VALID");
                           await login();
                         }
                       },

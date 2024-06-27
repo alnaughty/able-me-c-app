@@ -20,7 +20,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with ColorPalette {
   Future<void> initCheck() async {
     // await _cacher.removeToken();
     final String? accessToken = _cacher.getUserToken();
-    
+
     ref.watch(accessTokenProvider.notifier).update((state) => accessToken);
     await Future.delayed(1000.ms);
     if (accessToken != null) {
@@ -33,7 +33,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with ColorPalette {
 
     // ignore: use_build_context_synchronously
     context.replaceNamed('login-auth', extra: "splash-tag");
-    print("GO TO LOGIN");
   }
 
   @override

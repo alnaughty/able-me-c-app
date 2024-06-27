@@ -43,7 +43,6 @@ class ImageProcessor {
           await compressImage(File(file.path).readAsBytesSync());
       return base64Encode(fileBytes);
     } catch (e) {
-      print("UNABLE TO COMPRESS");
       return null;
     }
   }
@@ -59,7 +58,6 @@ class ImageProcessor {
         File(file.path),
       );
     } catch (e) {
-      print("IMG PICK FAILED");
       return null;
     }
   }

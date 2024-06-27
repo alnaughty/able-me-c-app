@@ -34,8 +34,8 @@ class _StoreListingDisplayState extends ConsumerState<StoreListingDisplay> {
             ),
           );
         }
-        final List<StoreModel> res =
-            data.sublist(0, data.length < 5 ? data.length : 5);
+        final List<StoreModel> res = data;
+        res.sort((a, b) => a.name.compareTo(b.name));
         return ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -45,7 +45,10 @@ class _StoreListingDisplayState extends ConsumerState<StoreListingDisplay> {
             return StoreCard(
                 data: _data,
                 onPressed: () {
-                  context.push('/restaurant-details/${_data.id}');
+                  if (widget.type == StoreType.restaurant) {
+                    context.push('/restaurant-details/${_data.id}');
+                    return;
+                  }
                 });
           },
           separatorBuilder: (_, i) => const SizedBox(

@@ -53,7 +53,7 @@ class GoogleGeocoding implements Geocoding {
   }
 
   Future<List<GeoAddress>?> _send(String url) async {
-    //print("Sending $url...");
+    //
     final uri = Uri.parse(url);
     final request = await _httpClient.getUrl(uri);
     if (headers != null) {
@@ -63,7 +63,7 @@ class GoogleGeocoding implements Geocoding {
     }
     final response = await request.close();
     final responseBody = await utf8.decoder.bind(response).join();
-    //print("Received $responseBody...");
+    //
     var data = jsonDecode(responseBody);
 
     var results = data["results"];

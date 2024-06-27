@@ -39,7 +39,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
   }
 
   void sendCode() {
-    print("SEND CODE");
     context.pushNamed("recovery-page");
   }
 
@@ -142,7 +141,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                           FormBuilderValidators.email(),
                         ]),
                         onEditingComplete: () async {
-                          print("Complete");
                           final bool isValidated =
                               _kForm.currentState!.validate();
                           if (isValidated) {

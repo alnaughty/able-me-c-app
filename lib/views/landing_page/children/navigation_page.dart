@@ -19,6 +19,7 @@ import 'package:able_me/view_models/notifiers/user_location_state_notifier.dart'
 import 'package:able_me/view_models/theme_provider.dart';
 import 'package:able_me/views/landing_page/children/blogs_page_components/main_blogs_page.dart';
 import 'package:able_me/views/landing_page/children/history_page.dart';
+import 'package:able_me/views/landing_page/children/medicine_page_components/main_medicine_page.dart';
 import 'package:able_me/views/landing_page/children/profile_page.dart';
 import 'package:able_me/views/landing_page/children/restaurant_page_components/main_restaurant_page.dart';
 import 'package:able_me/views/landing_page/children/transportation_page_components/main_transportation_page.dart';
@@ -60,7 +61,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
       key: _kTranspo,
     ),
     const MainRestaurantPage(),
-    const HistoryPage(),
+    const MainMedicinePage(),
     Container(
       color: Colors.red,
     ),
@@ -72,7 +73,6 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
 
     final bool isNew = pos == null;
     if (pos == null) {
-      print("null point");
       pos = p;
       if (mounted) setState(() {});
     }
@@ -96,8 +96,6 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
       _currentUser,
     );
     hasListened = false;
-
-    print("POSITION ${p.toString()}");
 
     if (mounted) setState(() {});
   }
@@ -144,7 +142,6 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
       //   await receivedValue(event);
       // });
     } else {
-      print("FF");
       final LocationPermission perm = await Geolocator.requestPermission();
       if (perm == LocationPermission.always ||
           perm == LocationPermission.whileInUse) {
@@ -175,7 +172,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
           await book();
           isLoading = false;
           if (mounted) setState(() {});
-          print("BOOK RIDE NA!");
+
           return;
         }
         // final notifier = ref.read(bookingPayloadNotifier.notifier);
@@ -219,10 +216,10 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
         setState(() {
           udata = value;
         });
-        print("ACCOUNT VALUE : $udata");
+
         if (value == null) {
           Fluttertoast.showToast(msg: "Account is incomplete");
-          print("GO TO REGISTER DETAILS PAGE");
+
           return;
         }
         _vm.updateID(value.id);

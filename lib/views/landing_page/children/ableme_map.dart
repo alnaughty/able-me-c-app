@@ -46,7 +46,6 @@ class _AbleMeMapPageState extends ConsumerState<AbleMeMapPage>
             ),
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
-              print("MAP CREATED");
             },
             circles: <Circle>{
               Circle(

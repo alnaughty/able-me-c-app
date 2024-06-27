@@ -6,10 +6,8 @@ import 'package:able_me/views/authentication/recovery_code.dart';
 import 'package:able_me/views/authentication/register.dart';
 import 'package:able_me/views/landing_page/children/ableme_map.dart';
 import 'package:able_me/views/landing_page/children/blogs_page_components/blog_details.dart';
-import 'package:able_me/views/landing_page/children/home_page_components/foods/browse_restaurant_page.dart';
-import 'package:able_me/views/landing_page/children/home_page_components/foods/menu/menu_details.dart';
-import 'package:able_me/views/landing_page/children/home_page_components/foods/restaurant_details_page.dart';
-import 'package:able_me/views/landing_page/children/home_page_components/medicine/browse_pharmacy_page.dart';
+import 'package:able_me/views/landing_page/children/restaurant_page_components/menu/menu_details.dart';
+import 'package:able_me/views/landing_page/children/restaurant_page_components/restaurant_details_page.dart';
 import 'package:able_me/views/landing_page/children/navigation_page.dart';
 import 'package:able_me/views/landing_page/children/profile_page.dart';
 import 'package:able_me/views/landing_page/children/profile_page_components/address_page.dart';
@@ -87,7 +85,7 @@ class RouteConfig {
             path: 'login-auth',
             pageBuilder: (BuildContext context, GoRouterState state) {
               final String? tag = state.extra as String?;
-              print("TAG $tag");
+
               return buildPageWithDefaultTransition(
                 context: context,
                 state: state,
@@ -223,28 +221,6 @@ class RouteConfig {
             child: RestaurantDetails(
               id: int.parse(state.pathParameters['id']!),
             ),
-            type: ZTransitionAnim.slideLR,
-          );
-        },
-      ),
-      GoRoute(
-        path: '/browse-restaurants',
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return buildPageWithDefaultTransition(
-            context: context,
-            state: state,
-            child: const BrowseRestaurantPage(),
-            type: ZTransitionAnim.slideLR,
-          );
-        },
-      ),
-      GoRoute(
-        path: '/browse-pharmacies',
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return buildPageWithDefaultTransition(
-            context: context,
-            state: state,
-            child: const BrowsePharmacyPage(),
             type: ZTransitionAnim.slideLR,
           );
         },

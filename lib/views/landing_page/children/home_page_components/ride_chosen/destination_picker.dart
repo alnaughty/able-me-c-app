@@ -6,6 +6,7 @@ import 'package:able_me/helpers/widget/custom_marker.dart';
 import 'package:able_me/services/geocoder_services/geocoder.dart';
 import 'package:able_me/view_models/app/coordinate.dart';
 import 'package:able_me/view_models/booking_payload_vm.dart';
+import 'package:able_me/view_models/notifiers/current_address_notifier.dart';
 import 'package:able_me/view_models/theme_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -43,18 +44,19 @@ class DestinationPickerState extends ConsumerState<DestinationPicker>
   }
 
   Future<void> initPoint() async {
-    final coordinate = ref.read(coordinateProvider)!;
+    final coordinate = ref.read(currentAddressNotifier);
+    if (coordinate == null) {
+      throw "no coordinate";
+    }
     await Geocoder.google()
-        .findAddressesFromGeoPoint(coordinate.toGeoPoint())
+        .findAddressesFromGeoPoint(coordinate.coordinates)
         .then((value) {
       if (value.isNotEmpty) {
         _pickup.text = value.first.addressLine ?? "Unknown Location";
-        _vm.updatePickupLocation(coordinate.toGeoPoint());
+        _vm.updatePickupLocation(coordinate.coordinates);
       }
     });
-    _vm.stream.listen((event) {
-      
-    });
+    _vm.stream.listen((event) {});
     // ref.watch(bookDataProvider.notifier).update((state) => state.copyWith(
     //     payload: state.payload.copyWith(
     //         pickupLocation:
@@ -150,17 +152,32 @@ class DestinationPickerState extends ConsumerState<DestinationPicker>
                             //     (state) => state.copyWith(
                             //         payload: state.payload
                             //             .copyWith(pickupLocation: g)));
-                            _vm.updatePickupLocation(g);
                             await Geocoder.google()
                                 .findAddressesFromGeoPoint(g)
                                 .then((value) {
                               if (value.isNotEmpty) {
                                 _pickup.text = value.first.addressLine ??
                                     "Unknown Address";
+                                ref
+                                    .read(currentAddressNotifier.notifier)
+                                    .update((state) => CurrentAddress(
+                                          addressLine:
+                                              value.first.addressLine ?? "",
+                                          city: value.first.adminAreaCode ?? "",
+                                          coordinates: g,
+                                          locality: value.first.locality ?? "",
+                                          countryCode:
+                                              value.first.countryCode ?? "",
+                                        ));
+                                _vm.updatePickupLocation(g);
+                                widget.onPickupcallback(g);
                                 if (mounted) setState(() {});
                               }
                             });
-                            widget.onPickupcallback(g);
+
+                            // _vm.updatePickupLocation(g);
+
+                            // widget.onPickupcallback(g);
                           },
                         ),
                       ),
