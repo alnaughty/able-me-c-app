@@ -71,207 +71,215 @@ class MainTransportationPageState extends ConsumerState<MainTransportationPage>
   // PickupAndDestMap? map;
   @override
   Widget build(BuildContext context) {
+    final CurrentAddress? ad = ref.watch(currentAddressNotifier);
     final Color bgColor = context.theme.scaffoldBackgroundColor;
     final Color textColor = context.theme.secondaryHeaderColor;
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     final Size size = MediaQuery.of(context).size;
     final CurrentAddress? address = ref.watch(currentAddressNotifier);
-    return CustomScrollView(
-      slivers: [
-        // map ??
-        //       Container(
-        //         width: size.width,
-        //         color: Colors.red,
-        //         height: size.height * .65,
-        //       )
+    return ad == null
+        ? Container()
+        : CustomScrollView(
+            shrinkWrap: true,
+            slivers: [
+              // map ??
+              //       Container(
+              //         width: size.width,
+              //         color: Colors.red,
+              //         height: size.height * .65,
+              //       )
 
-        SliverAppBar(
-          pinned: true,
-          floating: true,
-          stretch: true,
-          forceMaterialTransparency: true,
-          backgroundColor: Colors.red,
-          // bottom: PreferredSize(
-          //     preferredSize: const Size.fromHeight(0), child: Container()),
-          // flexibleSpace: FlexibleSpaceBar(
-          //   collapseMode: CollapseMode.pin,
-          //   background:
-          // ),
-          flexibleSpace: SizedBox(
-              width: size.width,
-              height: size.height * .65,
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: map,
-                  ),
-                  if (address != null) ...{
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      top: 10,
-                      child: SafeArea(
-                        bottom: false,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              "assets/icons/location.svg",
-                              color: purplePalette,
-                              width: 20,
-                            ),
-                            const Gap(5),
-                            Text(
-                              "${address.locality}, ${address.city}, ${address.countryCode}"
-                                  .capitalizeWords(),
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontFamily: "Montserrat",
-                                color: purplePalette,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w700,
+              SliverAppBar(
+                pinned: true,
+                floating: true,
+                stretch: true,
+                forceMaterialTransparency: true,
+                backgroundColor: Colors.red,
+                // bottom: PreferredSize(
+                //     preferredSize: const Size.fromHeight(0), child: Container()),
+                // flexibleSpace: FlexibleSpaceBar(
+                //   collapseMode: CollapseMode.pin,
+                //   background:
+                // ),
+                flexibleSpace: SizedBox(
+                    width: size.width,
+                    height: size.height * .65,
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: map,
+                        ),
+                        if (address != null) ...{
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            top: 10,
+                            child: SafeArea(
+                              bottom: false,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/icons/location.svg",
+                                    color: purplePalette,
+                                    width: 20,
+                                  ),
+                                  const Gap(5),
+                                  Text(
+                                    "${address.locality}, ${address.city}, ${address.countryCode}"
+                                        .capitalizeWords(),
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontFamily: "Montserrat",
+                                      color: purplePalette,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  },
-                  Positioned(
-                      right: 10,
-                      top: 0,
-                      child: SafeArea(
-                        bottom: false,
-                        child: IconButton(
-                          onPressed: () {},
-                          tooltip: "History",
-                          style: ButtonStyle(
-                              backgroundColor: WidgetStateProperty.resolveWith(
-                                (_) => purplePalette,
-                              ),
-                              foregroundColor: WidgetStateProperty.resolveWith(
-                                  (_) => Colors.white)),
-                          icon: const Icon(Icons.history),
-                        ),
-                      )),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      width: size.width,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: bgColor,
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(50),
-                        ),
-                      ),
-                      child: Center(
-                        child: Container(
-                          width: 80,
-                          height: 7,
-                          decoration: BoxDecoration(
-                            color: bgColor.darken(),
-                            borderRadius: BorderRadius.circular(20),
                           ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              )),
-          expandedHeight: size.height * .65,
-          collapsedHeight: size.height * .35,
-        ),
-        SliverList.list(children: [
-          Center(
-            child: Text(
-              "Lets book your next trip",
-              style: TextStyle(
-                color: textColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
+                        },
+                        // Positioned(
+                        //     right: 10,
+                        //     top: 0,
+                        //     child: SafeArea(
+                        //       bottom: false,
+                        //       child: IconButton(
+                        //         onPressed: () {},
+                        //         tooltip: "History",
+                        //         style: ButtonStyle(
+                        //             backgroundColor: WidgetStateProperty.resolveWith(
+                        //               (_) => purplePalette,
+                        //             ),
+                        //             foregroundColor: WidgetStateProperty.resolveWith(
+                        //                 (_) => Colors.white)),
+                        //         icon: const Icon(Icons.history),
+                        //       ),
+                        //     )),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            width: size.width,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: bgColor,
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(50),
+                              ),
+                            ),
+                            child: Center(
+                              child: Container(
+                                width: 80,
+                                height: 7,
+                                decoration: BoxDecoration(
+                                  color: bgColor.darken(),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    )),
+                expandedHeight: size.height * .45,
+                collapsedHeight: size.height * .35,
               ),
-            ),
-          ),
-          const Gap(15),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-            child: Column(
-              children: [
-                NewBookingViewer(
-                    onBookPressed: widget.onBookPressed,
-                    onPayloadCreated: (payload) {
-                      if (payload.destination != null) {
-                        map = PickupAndDestMap(
-                          key: Key("${DateTime.now().microsecondsSinceEpoch}"),
-                          pickUpLocation: payload.pickupLocation,
-                          destination: payload.destination,
-                          size: size.height * .65,
-                        );
-                        if (mounted) setState(() {});
-                      }
-                    },
-                    destK: _kDest,
-                    deptMiscK: _kDeptMisc),
-                const Gap(20),
-                MaterialButton(
-                  height: 55,
-                  color: purplePalette,
-                  onPressed: () async {
-                    final bool isDestGood = _kDest.currentState!.isValidated();
-                    final bool isDeptGood =
-                        _kDeptMisc.currentState!.isValidated();
-                    if (isDestGood && isDeptGood) {
-                      widget.onBookPressed();
-                      map = PickupAndDestMap(
-                        key: Key("$pickUpLocation"),
-                        destination: null,
-                        pickUpLocation: pickUpLocation,
-                        size: context.csize!.height * .65,
-                      );
-                      if (mounted) setState(() {});
-                    }
-                  },
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  child: const Center(
-                    child: Text(
-                      "Book",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
+              SliverList.list(children: [
+                Center(
+                  child: Text(
+                    "Lets book your next trip",
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-              ],
-            ),
-            // child: Column(
-            //   children: [
-            //     // DestinationPicker(
-            //     //   key: _kDest,
-            //     //   onDestinationCallback: (g) {},
-            //     //   onPickupcallback: (g) {},
-            //     // ),
-            //   ],
-            // ),
-          ),
+                const Gap(15),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                  child: Column(
+                    children: [
+                      NewBookingViewer(
+                          onBookPressed: widget.onBookPressed,
+                          onPayloadCreated: (payload) {
+                            if (payload.payload.destination != null &&
+                                payload.updateMap) {
+                              map = PickupAndDestMap(
+                                key: Key(
+                                    "${DateTime.now().microsecondsSinceEpoch}"),
+                                pickUpLocation: payload.payload.pickupLocation,
+                                destination: payload.payload.destination,
+                                size: size.height * .65,
+                              );
+                              if (mounted) setState(() {});
+                            }
+                          },
+                          destK: _kDest,
+                          deptMiscK: _kDeptMisc),
+                      const Gap(20),
+                      MaterialButton(
+                        height: 55,
+                        color: purplePalette,
+                        onPressed: () async {
+                          final bool isDestGood =
+                              _kDest.currentState!.isValidated();
+                          final bool isDeptGood =
+                              _kDeptMisc.currentState!.isValidated();
+                          if (isDestGood && isDeptGood) {
+                            widget.onBookPressed();
+                            map = PickupAndDestMap(
+                              key: Key("$pickUpLocation"),
+                              destination: null,
+                              pickUpLocation: pickUpLocation,
+                              size: context.csize!.height * .65,
+                            );
+                            if (mounted) setState(() {});
+                          }
+                        },
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        child: const Center(
+                          child: Text(
+                            "Book",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // child: Column(
+                  //   children: [
+                  //     // DestinationPicker(
+                  //     //   key: _kDest,
+                  //     //   onDestinationCallback: (g) {},
+                  //     //   onPickupcallback: (g) {},
+                  //     // ),
+                  //   ],
+                  // ),
+                ),
 
-          // Container(
-          //   width: size.width,
-          //   height: 40,
-          //   color: Colors.red,
-          // ),
-          const SafeArea(
-            child: SizedBox(
-              height: 20,
-            ),
-          )
-        ])
-      ],
-    );
+                // Container(
+                //   width: size.width,
+                //   height: 40,
+                //   color: Colors.red,
+                // ),
+                const SafeArea(
+                  child: SizedBox(
+                    height: 20,
+                  ),
+                )
+              ])
+            ],
+          );
     // return SingleChildScrollView(
     //   child: Column(
     //     children: [

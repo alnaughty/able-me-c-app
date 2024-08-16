@@ -1,5 +1,4 @@
 import 'package:able_me/models/user_model.dart';
-import 'package:able_me/services/auth/user_data.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // class CurrentUser extends StateNotifier<UserModel?> {

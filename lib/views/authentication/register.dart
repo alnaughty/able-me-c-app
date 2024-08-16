@@ -53,6 +53,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> with ColorPalette {
         });
         return;
       }
+      await registerUser(value, false);
     });
   }
 

@@ -71,20 +71,20 @@ class DepartureAndMiscState extends ConsumerState<DepartureAndMisc>
     _time = TextEditingController();
     _price = TextEditingController();
     _note = TextEditingController();
-    _vm.stream.listen((event) {
-      numOfPassengers = event.passengers;
-      numOfLuggage = event.luggage;
-      _departureDate = event.departureDate;
-      _departureTime = event.departureTime;
-      _date.text = DateFormat('MMM dd, yyyy').format(_departureDate);
-      _time.text = event.departureTime.format(context);
-      _price.text = event.price.toStringAsFixed(2);
-      wheelChairFriendly = event.isWheelchairFriendly;
-      withPet = event.withPet;
-      _note.text = event.note ?? "";
-      if (mounted) setState(() {});
-      // _price
-    });
+    // _vm.stream.listen((event) {
+    //   numOfPassengers = event.passengers;
+    //   numOfLuggage = event.luggage;
+    //   _departureDate = event.departureDate;
+    //   _departureTime = event.departureTime;
+    //   _date.text = DateFormat('MMM dd, yyyy').format(_departureDate);
+    //   _time.text = event.departureTime.format(context);
+    //   _price.text = event.price.toStringAsFixed(2);
+    //   wheelChairFriendly = event.isWheelchairFriendly;
+    //   withPet = event.withPet;
+    //   _note.text = event.note ?? "";
+    //   if (mounted) setState(() {});
+    //   // _price
+    // });
     // ref.watch(bookDataProvider.notifier).addListener((state) {
     //   if (state == null) return;
     //   setState(() {
@@ -163,7 +163,7 @@ class DepartureAndMiscState extends ConsumerState<DepartureAndMisc>
                                       lastDate: DateTime.now().add(30.days),
                                     ).then((value) {
                                       if (value == null) return;
-
+                                      _vm.updateDepartureDate(value);
                                       setState(() {
                                         _date.text = DateFormat('MMM dd, yyyy')
                                             .format(_departureDate);
@@ -231,6 +231,7 @@ class DepartureAndMiscState extends ConsumerState<DepartureAndMisc>
 
                           _departureTime = value;
                           _time.text = value.format(context);
+                          _vm.updateDepartureTime(value);
                           if (mounted) setState(() {});
                           _kForm.currentState!.validate();
                           widget.onTimeCallback(value);
@@ -318,6 +319,7 @@ class DepartureAndMiscState extends ConsumerState<DepartureAndMisc>
                           //     state.copyWith(
                           //         payload:
                           //             state.payload.copyWith(passengers: i)));
+                          _vm.updatePassenger(i);
                           _kForm.currentState!.validate();
                           widget.passengerCallback(i);
                         },
@@ -378,6 +380,7 @@ class DepartureAndMiscState extends ConsumerState<DepartureAndMisc>
                         ),
                         onChanged: (i) {
                           if (i == null) return;
+                          _vm.updateLuggage(i);
                           // dataProvider.update((state) => state!.copyWith(
                           //       payload: state.payload.copyWith(luggage: i),
                           //     ));
@@ -413,12 +416,14 @@ class DepartureAndMiscState extends ConsumerState<DepartureAndMisc>
                   color: textColor,
                   fontSize: 13,
                 ),
-                onFieldSubmitted: (t) {
+                onChanged: (t) {
                   final double? ff = double.tryParse(
                       t.replaceAll(',', ".").replaceAll('-', "."));
 
                   if (ff != null) {
+                    print(ff);
                     widget.budgetCallback(ff);
+                    _vm.updatePrice(ff);
                     _kForm.currentState!.validate();
                   }
                 },
@@ -481,6 +486,7 @@ class DepartureAndMiscState extends ConsumerState<DepartureAndMisc>
                   setState(() {
                     wheelChairFriendly = b;
                   });
+                  _vm.updateWheelChair(b);
                   widget.wheelChairFriendlyCallback(b);
                 }),
           ),
@@ -508,6 +514,7 @@ class DepartureAndMiscState extends ConsumerState<DepartureAndMisc>
                   setState(() {
                     withPet = b;
                   });
+                  _vm.updateWithPet(b);
                   widget.withPetCallback(b);
                 }),
           ),
@@ -542,6 +549,7 @@ class DepartureAndMiscState extends ConsumerState<DepartureAndMisc>
                   //   widget.onNoteCallback(t);
                   // },
                   onChanged: (t) {
+                    _vm.updateNote(t);
                     widget.onNoteCallback(t);
                   },
                   decoration: InputDecoration(

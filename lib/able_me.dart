@@ -1,6 +1,5 @@
 import 'package:able_me/app_config/palette.dart';
 import 'package:able_me/app_config/routes.dart';
-import 'package:able_me/helpers/context_ext.dart';
 import 'package:able_me/view_models/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,24 +20,25 @@ class AbleMeApp extends StatelessWidget with ColorPalette {
           themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
           darkTheme: ThemeData(
             appBarTheme: const AppBarTheme(
-                color: Color.fromARGB(255, 13, 13, 13),
-                iconTheme: IconThemeData(
-                  color: Colors.white,
-                ),
-                titleTextStyle: TextStyle(
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                )),
+              color: Color.fromARGB(255, 13, 13, 13),
+              iconTheme: IconThemeData(
+                color: Colors.white,
+              ),
+              titleTextStyle: TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             switchTheme: SwitchThemeData(
               thumbColor:
-                  MaterialStateProperty.resolveWith((states) => Colors.white),
-              trackOutlineColor: MaterialStateProperty.resolveWith(
+                  WidgetStateProperty.resolveWith((states) => Colors.white),
+              trackOutlineColor: WidgetStateProperty.resolveWith(
                   (states) => Colors.transparent),
-              trackColor: MaterialStateProperty.resolveWith(
+              trackColor: WidgetStateProperty.resolveWith(
                   (states) => Colors.grey.shade300),
               overlayColor:
-                  MaterialStateProperty.resolveWith((states) => greenPalette),
+                  WidgetStateProperty.resolveWith((states) => greenPalette),
             ),
             fontFamily: "Montserrat",
             bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -55,11 +55,11 @@ class AbleMeApp extends StatelessWidget with ColorPalette {
             cardColor: Colors.grey.shade900,
             checkboxTheme: CheckboxThemeData(
               side: const BorderSide(color: Colors.white),
-              overlayColor: MaterialStateProperty.resolveWith(
+              overlayColor: WidgetStateProperty.resolveWith(
                   (states) => purplePalette.withOpacity(.3)),
               checkColor:
-                  MaterialStateProperty.resolveWith((states) => Colors.white),
-              fillColor: MaterialStateProperty.resolveWith(
+                  WidgetStateProperty.resolveWith((states) => Colors.white),
+              fillColor: WidgetStateProperty.resolveWith(
                   (states) => Colors.transparent),
             ),
             inputDecorationTheme: InputDecorationTheme(
@@ -113,22 +113,22 @@ class AbleMeApp extends StatelessWidget with ColorPalette {
                 )),
             switchTheme: SwitchThemeData(
               thumbColor:
-                  MaterialStateProperty.resolveWith((states) => Colors.white),
-              trackOutlineColor: MaterialStateProperty.resolveWith(
+                  WidgetStateProperty.resolveWith((states) => Colors.white),
+              trackOutlineColor: WidgetStateProperty.resolveWith(
                   (states) => Colors.transparent),
-              trackColor: MaterialStateProperty.resolveWith(
+              trackColor: WidgetStateProperty.resolveWith(
                   (states) => Colors.grey.shade300),
               overlayColor:
-                  MaterialStateProperty.resolveWith((states) => greenPalette),
+                  WidgetStateProperty.resolveWith((states) => greenPalette),
             ),
             scaffoldBackgroundColor: const Color.fromARGB(255, 250, 250, 250),
             checkboxTheme: CheckboxThemeData(
               side: const BorderSide(color: Color.fromARGB(255, 18, 18, 18)),
-              overlayColor: MaterialStateProperty.resolveWith(
+              overlayColor: WidgetStateProperty.resolveWith(
                   (states) => purplePalette.withOpacity(.3)),
               checkColor:
-                  MaterialStateProperty.resolveWith((states) => Colors.white),
-              fillColor: MaterialStateProperty.resolveWith(
+                  WidgetStateProperty.resolveWith((states) => Colors.white),
+              fillColor: WidgetStateProperty.resolveWith(
                   (states) => Colors.transparent),
             ),
             secondaryHeaderColor: const Color.fromARGB(255, 18, 18, 18),

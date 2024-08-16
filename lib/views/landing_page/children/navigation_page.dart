@@ -261,144 +261,149 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
                   );
                 }
                 return Scaffold(
-                  extendBody: true,
-                  body: PageView(
-                    controller: _controller,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: content,
-                  ),
-                  floatingActionButton: FloatingActionButton(
-                    backgroundColor: currentIndex == 4
-                        ? purplePalette
-                        : isDarkMode
-                            ? bgColor.lighten()
-                            : bgColor.darken(),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(60)),
-                    onPressed: () {
-                      setState(() {
-                        currentIndex = 4;
-                      });
-                      _controller.jumpToPage(
-                        currentIndex,
-                      );
+                  extendBody: false,
+                  body: MainTransportationPage(
+                    onBookPressed: () async {
+                      await book();
                     },
-                    child: Center(
-                      child: Image.asset(
-                        "assets/images/logo.png",
-                        width: 30,
-                        color: currentIndex == 4 ? Colors.white : null,
-                      ),
-                    ),
                   ),
-                  floatingActionButtonLocation:
-                      FloatingActionButtonLocation.centerDocked,
-                  bottomNavigationBar: BottomAppBar(
-                    elevation: 0,
-                    color: isDarkMode ? bgColor.lighten() : bgColor.darken(),
-                    height: 60,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    shape: const CircularNotchedRectangle(),
-                    notchMargin: 8.0,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                currentIndex = 0;
-                              });
-                              _controller.animateToPage(
-                                currentIndex,
-                                duration: 600.ms,
-                                curve: Curves.fastEaseInToSlowEaseOut,
-                              );
-                            },
-                            child: Center(
-                              child: SvgPicture.asset(
-                                "assets/icons/nav_icons/car.svg",
-                                width: 20,
-                                color: currentIndex == 0
-                                    ? purplePalette
-                                    : textColor.withOpacity(.4),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                currentIndex = 1;
-                              });
-                              _controller.animateToPage(
-                                currentIndex,
-                                duration: 600.ms,
-                                curve: Curves.fastEaseInToSlowEaseOut,
-                              );
-                            },
-                            child: Center(
-                              child: SvgPicture.asset(
-                                "assets/icons/nav_icons/food.svg",
-                                width: 20,
-                                color: currentIndex == 1
-                                    ? purplePalette
-                                    : textColor.withOpacity(.4),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Gap(75),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                currentIndex = 2;
-                              });
-                              _controller.animateToPage(
-                                currentIndex,
-                                duration: 600.ms,
-                                curve: Curves.fastEaseInToSlowEaseOut,
-                              );
-                            },
-                            child: Center(
-                              child: SvgPicture.asset(
-                                "assets/icons/nav_icons/doctor.svg",
-                                width: 20,
-                                color: currentIndex == 2
-                                    ? purplePalette
-                                    : textColor.withOpacity(.4),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                currentIndex = 3;
-                              });
-                              _controller.animateToPage(
-                                currentIndex,
-                                duration: 600.ms,
-                                curve: Curves.fastEaseInToSlowEaseOut,
-                              );
-                            },
-                            child: Center(
-                              child: SvgPicture.asset(
-                                "assets/icons/nav_icons/parcel.svg",
-                                width: 20,
-                                color: currentIndex == 3
-                                    ? purplePalette
-                                    : textColor.withOpacity(.4),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                  // body: PageView(
+                  //   controller: _controller,
+                  //   physics: const NeverScrollableScrollPhysics(),
+                  //   children: content,
+                  // ),
+                  // floatingActionButton: FloatingActionButton(
+                  //   backgroundColor: currentIndex == 4
+                  //       ? purplePalette
+                  //       : isDarkMode
+                  //           ? bgColor.lighten()
+                  //           : bgColor.darken(),
+                  //   shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(60)),
+                  //   onPressed: () {
+                  //     setState(() {
+                  //       currentIndex = 4;
+                  //     });
+                  //     _controller.jumpToPage(
+                  //       currentIndex,
+                  //     );
+                  //   },
+                  //   child: Center(
+                  //     child: Image.asset(
+                  //       "assets/images/logo.png",
+                  //       width: 30,
+                  //       color: currentIndex == 4 ? Colors.white : null,
+                  //     ),
+                  //   ),
+                  // ),
+                  // floatingActionButtonLocation:
+                  //     FloatingActionButtonLocation.centerDocked,
+                  // bottomNavigationBar: BottomAppBar(
+                  //   elevation: 0,
+                  //   color: isDarkMode ? bgColor.lighten() : bgColor.darken(),
+                  //   height: 60,
+                  //   padding:
+                  //       const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  //   shape: const CircularNotchedRectangle(),
+                  //   notchMargin: 8.0,
+                  //   child: Row(
+                  //     children: [
+                  //       Expanded(
+                  //         child: InkWell(
+                  //           onTap: () {
+                  //             setState(() {
+                  //               currentIndex = 0;
+                  //             });
+                  //             _controller.animateToPage(
+                  //               currentIndex,
+                  //               duration: 600.ms,
+                  //               curve: Curves.fastEaseInToSlowEaseOut,
+                  //             );
+                  //           },
+                  //           child: Center(
+                  //             child: SvgPicture.asset(
+                  //               "assets/icons/nav_icons/car.svg",
+                  //               width: 20,
+                  //               color: currentIndex == 0
+                  //                   ? purplePalette
+                  //                   : textColor.withOpacity(.4),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       Expanded(
+                  //         child: InkWell(
+                  //           onTap: () {
+                  //             setState(() {
+                  //               currentIndex = 1;
+                  //             });
+                  //             _controller.animateToPage(
+                  //               currentIndex,
+                  //               duration: 600.ms,
+                  //               curve: Curves.fastEaseInToSlowEaseOut,
+                  //             );
+                  //           },
+                  //           child: Center(
+                  //             child: SvgPicture.asset(
+                  //               "assets/icons/nav_icons/food.svg",
+                  //               width: 20,
+                  //               color: currentIndex == 1
+                  //                   ? purplePalette
+                  //                   : textColor.withOpacity(.4),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       const Gap(75),
+                  //       Expanded(
+                  //         child: InkWell(
+                  //           onTap: () {
+                  //             setState(() {
+                  //               currentIndex = 2;
+                  //             });
+                  //             _controller.animateToPage(
+                  //               currentIndex,
+                  //               duration: 600.ms,
+                  //               curve: Curves.fastEaseInToSlowEaseOut,
+                  //             );
+                  //           },
+                  //           child: Center(
+                  //             child: SvgPicture.asset(
+                  //               "assets/icons/nav_icons/doctor.svg",
+                  //               width: 20,
+                  //               color: currentIndex == 2
+                  //                   ? purplePalette
+                  //                   : textColor.withOpacity(.4),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       Expanded(
+                  //         child: InkWell(
+                  //           onTap: () {
+                  //             setState(() {
+                  //               currentIndex = 3;
+                  //             });
+                  //             _controller.animateToPage(
+                  //               currentIndex,
+                  //               duration: 600.ms,
+                  //               curve: Curves.fastEaseInToSlowEaseOut,
+                  //             );
+                  //           },
+                  //           child: Center(
+                  //             child: SvgPicture.asset(
+                  //               "assets/icons/nav_icons/parcel.svg",
+                  //               width: 20,
+                  //               color: currentIndex == 3
+                  //                   ? purplePalette
+                  //                   : textColor.withOpacity(.4),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
                 );
               },
             ),
@@ -447,6 +452,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
     await _vm.value.book().then((val) {
       if (val) {
         _vm.reset();
+        context.pushReplacement('/');
       }
       isLoading = false;
       if (mounted) setState(() {});

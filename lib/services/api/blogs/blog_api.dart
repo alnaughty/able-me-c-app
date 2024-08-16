@@ -38,7 +38,10 @@ class BlogApi extends Network {
         if (response.statusCode == 200) {
           var data = json.decode(response.body);
           final List res = data['data'];
-          return res.map((e) => BlogModel.fromJson(e)).toList();
+          return res
+              .where((e) => e['is_publish'] == 1)
+              .map((e) => BlogModel.fromJson(e))
+              .toList();
         }
         return [];
       });

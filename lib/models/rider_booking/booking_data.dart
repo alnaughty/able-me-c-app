@@ -33,7 +33,7 @@ class BookingPayload {
       required this.isWheelchairFriendly,
       this.note,
       required this.withPet});
-  Future<bool> book() async => _bookApi.book(payload: this);
+  Future<bool> book() async => await _bookApi.book(payload: this);
 
   BookingPayload copyWith({
     int? type,

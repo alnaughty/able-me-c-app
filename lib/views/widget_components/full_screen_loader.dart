@@ -25,19 +25,14 @@ class _FullScreenLoaderState extends State<FullScreenLoader> with ColorPalette {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Hero(
-            tag: "splash",
-            child: Image.asset(
-              "assets/images/logo.png",
-              gaplessPlayback: true,
-              isAntiAlias: true,
-              width: widget.size ?? size.width * .4,
-              fit: BoxFit.fitWidth,
-            )
-                .animate(
-                  onPlay: (controller) => controller.repeat(reverse: true),
-                )
-                .rotate(duration: 2000.ms),
-          ),
+              tag: "splash",
+              child: Image.asset(
+                "assets/images/loader.gif",
+                gaplessPlayback: true,
+                isAntiAlias: true,
+                width: widget.size ?? size.width * .4,
+                fit: BoxFit.fitWidth,
+              )),
           if (widget.showText) ...{
             const Gap(30),
             Column(

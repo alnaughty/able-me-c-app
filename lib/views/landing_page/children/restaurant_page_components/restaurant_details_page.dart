@@ -29,6 +29,8 @@ class RestaurantDetails extends ConsumerStatefulWidget {
 class _RestaurantDetailsState extends ConsumerState<RestaurantDetails>
     with ColorPalette {
   static final StoreAPI _api = StoreAPI();
+  late final ScrollController _scrollController = ScrollController()
+    ..addListener(listener);
   StoreDetails? details;
   Future<void> fetch() async {
     final StoreDetails? result = await _api.getDetails(widget.id);
@@ -42,12 +44,33 @@ class _RestaurantDetailsState extends ConsumerState<RestaurantDetails>
     if (mounted) setState(() {});
   }
 
+  void listener() {
+    print(_scrollController.offset);
+    final double f = _scrollController.offset / 255;
+    setState(() {
+      opacity = f >= 1
+          ? 1
+          : f <= 0
+              ? 0
+              : f;
+    });
+    print("OPACITY: $opacity");
+  }
+
   @override
   initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await fetch();
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(listener);
+    _scrollController.dispose();
+    // TODO: implement dispose
+    super.dispose();
   }
 
   final double containerheight = 300;
@@ -68,7 +91,7 @@ class _RestaurantDetailsState extends ConsumerState<RestaurantDetails>
   }
 
   String? itemImgPopup;
-
+  double opacity = 0;
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -78,257 +101,557 @@ class _RestaurantDetailsState extends ConsumerState<RestaurantDetails>
       children: [
         Positioned.fill(
           child: Scaffold(
-            body: details == null
-                ? Center(
-                    child: SizedBox(
-                      height: size.height * .4,
-                      child: FullScreenLoader(
-                        showText: false,
-                        size: size.width * .2,
+              body: details == null
+                  ? Center(
+                      child: SizedBox(
+                        height: size.height * .4,
+                        child: FullScreenLoader(
+                          showText: false,
+                          size: size.width * .2,
+                        ),
                       ),
-                    ),
-                  )
-                : SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: double.infinity,
-                          height: containerheight,
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  height: containerheight * .88,
-                                  child: CachedNetworkImage(
-                                    imageUrl: details!.coverUrl,
-                                    fit: BoxFit.cover,
-                                  ),
+                    )
+                  : CustomScrollView(
+                      physics: const ClampingScrollPhysics(),
+                      controller: _scrollController,
+                      slivers: [
+                        SliverAppBar(
+                            title: Opacity(
+                              opacity: opacity,
+                              child: Text(details!.name),
+                            ),
+                            leading: Opacity(
+                              opacity: opacity,
+                              child: const BackButton(),
+                            ),
+                            actions: [
+                              Opacity(
+                                opacity: opacity,
+                                child: IconButton(
+                                    onPressed: () {
+                                      print("BUTTON PRESSED");
+                                    },
+                                    icon: Icon(Icons.favorite_outline)),
+                              )
+                            ],
+                            // automaticallyImplyLeading: opacity >= .85,
+                            expandedHeight: containerheight * .88,
+                            pinned: true,
+                            centerTitle: false,
+                            flexibleSpace: FlexibleSpaceBar(
+                              collapseMode: CollapseMode.pin,
+                              background: SizedBox(
+                                width: double.infinity,
+                                height: containerheight,
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      top: 0,
+                                      left: 0,
+                                      right: 0,
+                                      child: Opacity(
+                                        opacity: 1 - opacity,
+                                        child: SizedBox(
+                                          width: double.infinity,
+                                          height: containerheight * .88,
+                                          child: CachedNetworkImage(
+                                            imageUrl: details!.coverUrl,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 20,
+                                      bottom: 0,
+                                      child: Opacity(
+                                        opacity: 1 - opacity,
+                                        child: GestureDetector(
+                                          onLongPress: () async {
+                                            _showPopup();
+                                            // await showGeneralDialog(
+                                            //   context: context,
+                                            //   barrierDismissible: true,
+                                            //   barrierLabel: "",
+                                            //   barrierColor: Colors.black,
+                                            //   transitionBuilder: (context, animation, secondaryAnimation, child) => Container(),
+                                            //   pageBuilder: (_, a1, a2) => IgnorePointer(
+                                            //     ignoring: true,
+                                            //     child: Container(),
+                                            //   ),
+                                            // );
+                                          },
+                                          onLongPressEnd: (d) {
+                                            _hidePopup();
+                                            // Navigator.of(context).pop();
+                                          },
+                                          child: Container(
+                                            width: containerheight * .45,
+                                            height: containerheight * .45,
+                                            // color: Colors.green,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                    color: bgColor, width: 3),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      color: textColor
+                                                          .withOpacity(.3),
+                                                      offset:
+                                                          const Offset(-1, 1),
+                                                      blurRadius: 5)
+                                                ]),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      containerheight * .45),
+                                              child: CachedNetworkImage(
+                                                imageUrl: details!.photoUrl,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                        right: 0,
+                                        top: 0,
+                                        child: SafeArea(
+                                          bottom: false,
+                                          child: Opacity(
+                                            opacity: 1 - opacity,
+                                            child: IconButton(
+                                                onPressed: () {
+                                                  print("BUTTON PRESSED");
+                                                },
+                                                icon: Icon(
+                                                    Icons.favorite_outline)),
+                                          ),
+                                        )),
+                                    Positioned(
+                                        left: 20,
+                                        top: 0,
+                                        child: Opacity(
+                                          opacity: 1 - opacity,
+                                          child: SafeArea(
+                                            child: BackButton(
+                                              style: ButtonStyle(
+                                                  minimumSize: WidgetStateProperty.resolveWith(
+                                                      (states) =>
+                                                          const Size(60, 60)),
+                                                  backgroundColor:
+                                                      WidgetStateProperty.resolveWith(
+                                                          (states) => purplePalette
+                                                              .withOpacity(.8)),
+                                                  shape: WidgetStateProperty.resolveWith(
+                                                      (states) =>
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(6)))),
+                                              color: Colors.white,
+                                              onPressed: () {
+                                                if (context.canPop()) {
+                                                  context.pop();
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ))
+                                  ],
                                 ),
                               ),
-                              Positioned(
-                                left: 20,
-                                bottom: 0,
-                                child: GestureDetector(
-                                  onLongPress: () async {
-                                    _showPopup();
-                                    // await showGeneralDialog(
-                                    //   context: context,
-                                    //   barrierDismissible: true,
-                                    //   barrierLabel: "",
-                                    //   barrierColor: Colors.black,
-                                    //   transitionBuilder: (context, animation, secondaryAnimation, child) => Container(),
-                                    //   pageBuilder: (_, a1, a2) => IgnorePointer(
-                                    //     ignoring: true,
-                                    //     child: Container(),
-                                    //   ),
-                                    // );
-                                  },
-                                  onLongPressEnd: (d) {
-                                    _hidePopup();
-                                    // Navigator.of(context).pop();
-                                  },
-                                  child: Container(
-                                    width: containerheight * .45,
-                                    height: containerheight * .45,
-                                    // color: Colors.green,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            color: bgColor, width: 3),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: textColor.withOpacity(.3),
-                                              offset: const Offset(-1, 1),
-                                              blurRadius: 5)
-                                        ]),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(
-                                          containerheight * .45),
-                                      child: CachedNetworkImage(
-                                        imageUrl: details!.photoUrl,
-                                        fit: BoxFit.cover,
+                            )),
+                        SliverList.list(
+                          children: [
+                            const Gap(20),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    details!.name.capitalizeWords(),
+                                    style: TextStyle(
+                                      color: textColor,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  Text(
+                                    details!.desc,
+                                    style: TextStyle(
+                                      color: textColor,
+                                    ),
+                                  ),
+                                  const Gap(20),
+
+                                  /// MAPA
+                                  LayoutBuilder(
+                                    builder: (_, c) => SizedBox(
+                                      width: c.maxWidth,
+                                      height: 170,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: StoreMapPage(
+                                            coordinates: details!.coordinates),
                                       ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                              Positioned(
-                                  left: 20,
-                                  top: 0,
-                                  child: SafeArea(
-                                    child: BackButton(
-                                      style: ButtonStyle(
-                                          minimumSize:
-                                              WidgetStateProperty.resolveWith(
-                                                  (states) =>
-                                                      const Size(60, 60)),
-                                          backgroundColor:
-                                              WidgetStateProperty.resolveWith(
-                                                  (states) => purplePalette
-                                                      .withOpacity(.8)),
-                                          shape: WidgetStateProperty.resolveWith(
-                                              (states) => RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(6)))),
-                                      color: Colors.white,
-                                      onPressed: () {
-                                        if (context.canPop()) {
-                                          context.pop();
-                                        }
-                                      },
+                            ),
+                            const Gap(20),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 0),
+                                  child: Text(
+                                    "categories".capitalizeWords(),
+                                    style: TextStyle(
+                                      color: textColor,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
                                     ),
-                                  ))
-                            ],
-                          ),
-                        ),
-                        const Gap(20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                details!.name.capitalizeWords(),
-                                style: TextStyle(
-                                  color: textColor,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              Text(
-                                details!.desc,
-                                style: TextStyle(
-                                  color: textColor,
-                                ),
-                              ),
-                              const Gap(20),
-
-                              /// MAPA
-                              LayoutBuilder(
-                                builder: (_, c) => SizedBox(
-                                  width: c.maxWidth,
-                                  height: 170,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: StoreMapPage(
-                                        coordinates: details!.coordinates),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Gap(20),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
+                                SizedBox(
+                                  height: 50,
+                                  width: double.infinity,
+                                  child: ListView.separated(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (_, i) {
+                                        final Category cat =
+                                            details!.categories[i];
+                                        // RawChip(label: label)
+                                        return RawChip(
+                                            onPressed: () {},
+                                            // padding: const EdgeInsets.symmetric(
+                                            //     horizontal: 25, vertical: 15),
+                                            labelPadding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 0),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(50)),
+                                            backgroundColor: bgColor.darken(),
+                                            // color: MaterialStateProperty.resolveWith(
+                                            //     (s) => bgColor.lighten()),
+                                            label: Text(
+                                              cat.name.capitalizeWords(),
+                                              style: TextStyle(
+                                                color: textColor,
+                                                fontSize: 10,
+                                              ),
+                                            ));
+                                      },
+                                      separatorBuilder: (_, i) =>
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                      itemCount: details!.categories.length),
+                                ),
+                              ],
+                            ),
+                            const Gap(20),
+                            GridView.builder(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 0),
-                              child: Text(
-                                "categories".capitalizeWords(),
-                                style: TextStyle(
-                                  color: textColor,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 20,
+                                childAspectRatio: .8,
+                                crossAxisSpacing: 20,
                               ),
-                            ),
-                            SizedBox(
-                              height: 50,
-                              width: double.infinity,
-                              child: ListView.separated(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (_, i) {
-                                    final Category cat = details!.categories[i];
-                                    // RawChip(label: label)
-                                    return RawChip(
-                                        onPressed: () {},
-                                        // padding: const EdgeInsets.symmetric(
-                                        //     horizontal: 25, vertical: 15),
-                                        labelPadding:
-                                            const EdgeInsets.symmetric(
-                                                horizontal: 20, vertical: 0),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(50)),
-                                        backgroundColor: bgColor.darken(),
-                                        // color: MaterialStateProperty.resolveWith(
-                                        //     (s) => bgColor.lighten()),
-                                        label: Text(
-                                          cat.name.capitalizeWords(),
-                                          style: TextStyle(
-                                            color: textColor,
-                                            fontSize: 10,
-                                          ),
-                                        ));
+                              itemBuilder: (_, i) {
+                                final StoreMenu menu = details!.menu[i];
+                                return GestureDetector(
+                                  onLongPress: () {
+                                    setState(() {
+                                      itemImgPopup = menu.photoUrl;
+                                    });
                                   },
-                                  separatorBuilder: (_, i) => const SizedBox(
-                                        width: 10,
-                                      ),
-                                  itemCount: details!.categories.length),
-                            ),
-                          ],
-                        ),
-                        const Gap(20),
-                        GridView.builder(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 0),
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 20,
-                            childAspectRatio: .8,
-                            crossAxisSpacing: 20,
-                          ),
-                          itemBuilder: (_, i) {
-                            final StoreMenu menu = details!.menu[i];
-                            return GestureDetector(
-                              onLongPress: () {
-                                setState(() {
-                                  itemImgPopup = menu.photoUrl;
-                                });
+                                  onLongPressEnd: (d) {
+                                    setState(() {
+                                      itemImgPopup = null;
+                                    });
+                                  },
+                                  child: MenuCard(menu: menu),
+                                );
                               },
-                              onLongPressEnd: (d) {
-                                setState(() {
-                                  itemImgPopup = null;
-                                });
-                              },
-                              child: MenuCard(menu: menu),
-                            );
-                          },
-                          itemCount: details!.menu.length,
-                          // crossAxisCount: 2,
+                              itemCount: details!.menu.length,
+                              // crossAxisCount: 2,
 
-                          // children: details!.menu
-                          //     .map((e) => GridTile(
-                          //           child: Container(
-                          //             // width: 100,
-                          //             // height: 100,
-                          //             color: Colors.red,
-                          //           ),
-                          //         ))
-                          //     .toList(),
-                        ),
-                        const SafeArea(
-                          top: false,
-                          child: SizedBox(
-                            height: 10,
-                          ),
+                              // children: details!.menu
+                              //     .map((e) => GridTile(
+                              //           child: Container(
+                              //             // width: 100,
+                              //             // height: 100,
+                              //             color: Colors.red,
+                              //           ),
+                              //         ))
+                              //     .toList(),
+                            ),
+                            const SafeArea(
+                              top: false,
+                              child: SizedBox(
+                                height: 10,
+                              ),
+                            )
+                          ],
                         )
                       ],
-                    ),
-                  ),
-          ),
+                    )
+              // : SingleChildScrollView(
+              //     child: Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         SizedBox(
+              //           width: double.infinity,
+              //           height: containerheight,
+              //           child: Stack(
+              //             children: [
+              //               Positioned(
+              //                 top: 0,
+              //                 left: 0,
+              //                 right: 0,
+              //                 child: SizedBox(
+              //                   width: double.infinity,
+              //                   height: containerheight * .88,
+              //                   child: CachedNetworkImage(
+              //                     imageUrl: details!.coverUrl,
+              //                     fit: BoxFit.cover,
+              //                   ),
+              //                 ),
+              //               ),
+              //               Positioned(
+              //                 left: 20,
+              //                 bottom: 0,
+              //                 child: GestureDetector(
+              //                   onLongPress: () async {
+              //                     _showPopup();
+              //                     // await showGeneralDialog(
+              //                     //   context: context,
+              //                     //   barrierDismissible: true,
+              //                     //   barrierLabel: "",
+              //                     //   barrierColor: Colors.black,
+              //                     //   transitionBuilder: (context, animation, secondaryAnimation, child) => Container(),
+              //                     //   pageBuilder: (_, a1, a2) => IgnorePointer(
+              //                     //     ignoring: true,
+              //                     //     child: Container(),
+              //                     //   ),
+              //                     // );
+              //                   },
+              //                   onLongPressEnd: (d) {
+              //                     _hidePopup();
+              //                     // Navigator.of(context).pop();
+              //                   },
+              //                   child: Container(
+              //                     width: containerheight * .45,
+              //                     height: containerheight * .45,
+              //                     // color: Colors.green,
+              //                     decoration: BoxDecoration(
+              //                         shape: BoxShape.circle,
+              //                         border: Border.all(
+              //                             color: bgColor, width: 3),
+              //                         boxShadow: [
+              //                           BoxShadow(
+              //                               color: textColor.withOpacity(.3),
+              //                               offset: const Offset(-1, 1),
+              //                               blurRadius: 5)
+              //                         ]),
+              //                     child: ClipRRect(
+              //                       borderRadius: BorderRadius.circular(
+              //                           containerheight * .45),
+              //                       child: CachedNetworkImage(
+              //                         imageUrl: details!.photoUrl,
+              //                         fit: BoxFit.cover,
+              //                       ),
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ),
+              //               Positioned(
+              //                   left: 20,
+              //                   top: 0,
+              //                   child: SafeArea(
+              //                     child: BackButton(
+              //                       style: ButtonStyle(
+              //                           minimumSize:
+              //                               WidgetStateProperty.resolveWith(
+              //                                   (states) =>
+              //                                       const Size(60, 60)),
+              //                           backgroundColor:
+              //                               WidgetStateProperty.resolveWith(
+              //                                   (states) => purplePalette
+              //                                       .withOpacity(.8)),
+              //                           shape: WidgetStateProperty.resolveWith(
+              //                               (states) => RoundedRectangleBorder(
+              //                                   borderRadius:
+              //                                       BorderRadius.circular(6)))),
+              //                       color: Colors.white,
+              //                       onPressed: () {
+              //                         if (context.canPop()) {
+              //                           context.pop();
+              //                         }
+              //                       },
+              //                     ),
+              //                   ))
+              //             ],
+              //           ),
+              //         ),
+              //         const Gap(20),
+              //         Padding(
+              //           padding: const EdgeInsets.symmetric(horizontal: 20),
+              //           child: Column(
+              //             crossAxisAlignment: CrossAxisAlignment.start,
+              //             children: [
+              //               Text(
+              //                 details!.name.capitalizeWords(),
+              //                 style: TextStyle(
+              //                   color: textColor,
+              //                   fontSize: 20,
+              //                   fontWeight: FontWeight.w700,
+              //                 ),
+              //               ),
+              //               Text(
+              //                 details!.desc,
+              //                 style: TextStyle(
+              //                   color: textColor,
+              //                 ),
+              //               ),
+              //               const Gap(20),
+
+              //               /// MAPA
+              //               LayoutBuilder(
+              //                 builder: (_, c) => SizedBox(
+              //                   width: c.maxWidth,
+              //                   height: 170,
+              //                   child: ClipRRect(
+              //                     borderRadius: BorderRadius.circular(10),
+              //                     child: StoreMapPage(
+              //                         coordinates: details!.coordinates),
+              //                   ),
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //         ),
+              //         const Gap(20),
+              //         Column(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           children: [
+              //             Padding(
+              //               padding: const EdgeInsets.symmetric(
+              //                   horizontal: 20, vertical: 0),
+              //               child: Text(
+              //                 "categories".capitalizeWords(),
+              //                 style: TextStyle(
+              //                   color: textColor,
+              //                   fontSize: 14,
+              //                   fontWeight: FontWeight.w700,
+              //                 ),
+              //               ),
+              //             ),
+              //             SizedBox(
+              //               height: 50,
+              //               width: double.infinity,
+              //               child: ListView.separated(
+              //                   padding: const EdgeInsets.symmetric(
+              //                       horizontal: 20),
+              //                   scrollDirection: Axis.horizontal,
+              //                   itemBuilder: (_, i) {
+              //                     final Category cat = details!.categories[i];
+              //                     // RawChip(label: label)
+              //                     return RawChip(
+              //                         onPressed: () {},
+              //                         // padding: const EdgeInsets.symmetric(
+              //                         //     horizontal: 25, vertical: 15),
+              //                         labelPadding:
+              //                             const EdgeInsets.symmetric(
+              //                                 horizontal: 20, vertical: 0),
+              //                         shape: RoundedRectangleBorder(
+              //                             borderRadius:
+              //                                 BorderRadius.circular(50)),
+              //                         backgroundColor: bgColor.darken(),
+              //                         // color: MaterialStateProperty.resolveWith(
+              //                         //     (s) => bgColor.lighten()),
+              //                         label: Text(
+              //                           cat.name.capitalizeWords(),
+              //                           style: TextStyle(
+              //                             color: textColor,
+              //                             fontSize: 10,
+              //                           ),
+              //                         ));
+              //                   },
+              //                   separatorBuilder: (_, i) => const SizedBox(
+              //                         width: 10,
+              //                       ),
+              //                   itemCount: details!.categories.length),
+              //             ),
+              //           ],
+              //         ),
+              //         const Gap(20),
+              //         GridView.builder(
+              //           padding: const EdgeInsets.symmetric(
+              //               horizontal: 20, vertical: 0),
+              //           shrinkWrap: true,
+              //           physics: const NeverScrollableScrollPhysics(),
+              //           gridDelegate:
+              //               const SliverGridDelegateWithFixedCrossAxisCount(
+              //             crossAxisCount: 2,
+              //             mainAxisSpacing: 20,
+              //             childAspectRatio: .8,
+              //             crossAxisSpacing: 20,
+              //           ),
+              //           itemBuilder: (_, i) {
+              //             final StoreMenu menu = details!.menu[i];
+              //             return GestureDetector(
+              //               onLongPress: () {
+              //                 setState(() {
+              //                   itemImgPopup = menu.photoUrl;
+              //                 });
+              //               },
+              //               onLongPressEnd: (d) {
+              //                 setState(() {
+              //                   itemImgPopup = null;
+              //                 });
+              //               },
+              //               child: MenuCard(menu: menu),
+              //             );
+              //           },
+              //           itemCount: details!.menu.length,
+              //           // crossAxisCount: 2,
+
+              //           // children: details!.menu
+              //           //     .map((e) => GridTile(
+              //           //           child: Container(
+              //           //             // width: 100,
+              //           //             // height: 100,
+              //           //             color: Colors.red,
+              //           //           ),
+              //           //         ))
+              //           //     .toList(),
+              //         ),
+              //         const SafeArea(
+              //           top: false,
+              //           child: SizedBox(
+              //             height: 10,
+              //           ),
+              //         )
+              //       ],
+              //     ),
+              //   ),
+              ),
         ),
         Align(
           alignment: AlignmentDirectional.center,

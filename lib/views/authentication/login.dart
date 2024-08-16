@@ -294,7 +294,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                     ),
                     TextButton(
                       style: ButtonStyle(
-                        textStyle: MaterialStateProperty.resolveWith(
+                        textStyle: WidgetStateProperty.resolveWith(
                           (states) => const TextStyle(
                             decoration: TextDecoration.underline,
                             fontWeight: FontWeight.w600,

@@ -22,14 +22,40 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.339534952888-3oriesj03qv9n2qk3pt13hmoi0qpbpjt</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>GIDClientID</key>
+	<string>339534952888-3oriesj03qv9n2qk3pt13hmoi0qpbpjt.apps.googleusercontent.com</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>sms</string>
+		<string>tel</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>your usage description here</string>
+	<string>Able me requires this device to grant access to camera for user experience</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Able me requires this device to grant access to location for a better user experience</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Able me requires this device to grant access to location when in use for a better user experience</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>your usage description here</string>
+	<string>We need access to the microphone to recognize speech.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Able me requires this device to grant access to photo album for a better user experience</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>We need access to speech recognition services.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -54,39 +80,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Able me requires this device to grant access to photo album for a better user experience</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Able me requires this device to grant access to location for a better user experience</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Able me requires this device to grant access to location when in use for a better user experience</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Able me requires this device to grant access to camera for user experience</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Able me requires this device to grant access to microphone for user experience</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>We need access to the microphone to recognize speech.</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>We need access to speech recognition services.</string>
-	<key>GIDClientID</key>
-	<string>339534952888-3oriesj03qv9n2qk3pt13hmoi0qpbpjt.apps.googleusercontent.com</string>
-	<!-- Google Sign-in Section -->
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>sms</string>
-		<string>tel</string>
-	</array>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.339534952888-3oriesj03qv9n2qk3pt13hmoi0qpbpjt</string>
-			</array>
-		</dict>
-	</array>
-	<!-- End of the Google Sign-in Section -->
 </dict>
 </plist>

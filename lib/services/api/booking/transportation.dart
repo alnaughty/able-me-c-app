@@ -18,6 +18,8 @@ class TransportationApi with Network {
       //
       // assert(accessToken == null, "Token is null");
       //
+      // print(payload.toPayload());
+      // return false;
       return await http
           .post(
         "${endpoint}booking/transportation/new".toUri,
@@ -29,6 +31,7 @@ class TransportationApi with Network {
       )
           .then((response) {
         if (response.statusCode == 200) {
+          print(response.body);
           Fluttertoast.showToast(msg: "Booking Uploaded");
           return true;
         }

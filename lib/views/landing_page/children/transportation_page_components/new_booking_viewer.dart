@@ -13,6 +13,12 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
+class PayloadCreateUpdatable {
+  final BookingPayload payload;
+  final bool updateMap;
+  const PayloadCreateUpdatable({required this.payload, this.updateMap = false});
+}
+
 class NewBookingViewer extends ConsumerStatefulWidget {
   const NewBookingViewer(
       {super.key,
@@ -20,7 +26,7 @@ class NewBookingViewer extends ConsumerStatefulWidget {
       required this.destK,
       required this.onBookPressed,
       required this.deptMiscK});
-  final ValueChanged<BookingPayload> onPayloadCreated;
+  final ValueChanged<PayloadCreateUpdatable> onPayloadCreated;
   final GlobalKey<DestinationPickerState> destK;
   final GlobalKey<DepartureAndMiscState> deptMiscK;
   final Function() onBookPressed;
@@ -110,10 +116,15 @@ class _NewBookingViewerState extends ConsumerState<NewBookingViewer>
         DestinationPicker(
           key: widget.destK,
           onDestinationCallback: (g) {
-            widget.onPayloadCreated(_vm.value.copyWith(destination: g));
+            widget.onPayloadCreated(
+              PayloadCreateUpdatable(
+                  payload: _vm.value.copyWith(destination: g), updateMap: true),
+            );
           },
           onPickupcallback: (g) {
-            widget.onPayloadCreated(_vm.value.copyWith(pickupLocation: g));
+            widget.onPayloadCreated(PayloadCreateUpdatable(
+                payload: _vm.value.copyWith(pickupLocation: g),
+                updateMap: true));
           },
         ),
         const Gap(20),
@@ -121,42 +132,60 @@ class _NewBookingViewerState extends ConsumerState<NewBookingViewer>
           key: widget.deptMiscK,
           initDate: initDate,
           onNoteCallback: (n) {
+            widget.onPayloadCreated(PayloadCreateUpdatable(
+              payload: _vm.value.copyWith(note: n),
+            ));
             setState(() {
               // note = n;
             });
           },
           dateEditable: !initDate.isSameDay(DateTime.now()),
           onDateCallback: (d) {
+            widget.onPayloadCreated(PayloadCreateUpdatable(
+                payload: _vm.value.copyWith(departureDate: d)));
             // setState(() {
             //   pickupDateTime = d;
             // });
           },
           onTimeCallback: (t) {
+            widget.onPayloadCreated(PayloadCreateUpdatable(
+                payload: _vm.value.copyWith(departureTime: t)));
             setState(() {
               // pickupTime = t;
             });
           },
           withPetCallback: (b) {
+            widget.onPayloadCreated(PayloadCreateUpdatable(
+                payload: _vm.value.copyWith(withPet: b)));
             setState(() {
               // withPet = b;
             });
           },
           wheelChairFriendlyCallback: (b) {
+            widget.onPayloadCreated(PayloadCreateUpdatable(
+                payload: _vm.value.copyWith(isWheelchairFriendly: b)));
             setState(() {
               // wheelChairFriendly = b;
             });
           },
           budgetCallback: (i) {
+            print(i);
+            widget.onPayloadCreated(
+                PayloadCreateUpdatable(payload: _vm.value.copyWith(price: i)));
             setState(() {
               // price = i;
             });
           },
           passengerCallback: (i) {
+            widget.onPayloadCreated(PayloadCreateUpdatable(
+                payload: _vm.value.copyWith(passengers: i)));
             setState(() {
               // passengerCount = i;
             });
           },
           luggageCallback: (i) {
+            widget.onPayloadCreated(PayloadCreateUpdatable(
+                payload: _vm.value.copyWith(luggage: i)));
             setState(() {
               // luggageCount = i;
             });

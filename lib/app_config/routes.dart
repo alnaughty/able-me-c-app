@@ -321,14 +321,3 @@ CustomTransitionPage buildPageWithDefaultTransition<T>({
       // transition ?? FadeTransition(opacity: animation, child: child),
       );
 }
-
-// Page<dynamic> Function(BuildContext, GoRouterState) defaultPageBuilder<T>(
-//         Widget child) =>
-//     (BuildContext context, GoRouterState state) {
-//       return buildPageWithDefaultTransition<T>(
-//         context: context,
-//         state: state,
-//         child: child,
-//         type: ZTransitionAnim.fade,
-//       );
-//     };
